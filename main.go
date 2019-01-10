@@ -48,7 +48,8 @@ func main() {
 		port = "8000" //localhost
 	}
 
-	connectionString := fmt.Sprintf("%s:%s@/%s", os.Getenv("db_user"), os.Getenv("db_pass"), os.Getenv("db_name"))
+	connectionString := fmt.Sprintf("%s:%s@tcp(%s)/%s", os.Getenv("db_user"), os.Getenv("db_pass"), os.Getenv("db_host"), os.Getenv("db_name"))
+	log.Info(connectionString)
 	models.InitDB(connectionString)
 
 	log.WithFields(log.Fields{
