@@ -1,0 +1,1 @@
+sudo lsof -t -i tcp:7000 | xargs kill -KILL

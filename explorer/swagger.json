@@ -1,0 +1,1110 @@
+{
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "schemes": [
+    "http"
+  ],
+  "swagger": "2.0",
+  "info": {
+    "description": "Golang SwaggerUI for Kurikulum SMK Service",
+    "contact": {
+      "name": "Andi Yudistira",
+      "email": "andi.yudistira81@gmail.com"
+    },
+    "version": "1.0.0"
+  },
+  "basePath": "/v1",
+  "paths": {
+    "/contacts": {
+      "get": {
+        "description": "Get the contact entities with paging.",
+        "tags": [
+          "contacts"
+        ],
+        "summary": "Return list of contacts with paging.",
+        "operationId": "listContacts",
+        "parameters": [
+          {
+            "pattern": "^\\d+$",
+            "type": "string",
+            "x-go-name": "Page",
+            "description": "contacts page param",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "pattern": "^\\d+$",
+            "type": "string",
+            "x-go-name": "PageSize",
+            "description": "contacts page size param",
+            "name": "pageSize",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "x-go-name": "DistrictID",
+            "description": "contacts district id param",
+            "name": "districtID",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/contactPagingResp"
+          },
+          "400": {
+            "$ref": "#/responses/badReq"
+          },
+          "404": {
+            "$ref": "#/responses/notFound"
+          },
+          "500": {
+            "$ref": "#/responses/contactPagingResp"
+          }
+        }
+      }
+    },
+    "/contacts/all": {
+      "get": {
+        "description": "Get the contact entities without paging.",
+        "tags": [
+          "contacts"
+        ],
+        "summary": "Return list of contacts without paging.",
+        "operationId": "listAllContacts",
+        "responses": {
+          "200": {
+            "$ref": "#/responses/contactResp"
+          },
+          "400": {
+            "$ref": "#/responses/badReq"
+          },
+          "404": {
+            "$ref": "#/responses/notFound"
+          },
+          "500": {
+            "$ref": "#/responses/contactResp"
+          }
+        }
+      }
+    },
+    "/districts": {
+      "get": {
+        "description": "Get the district entities.",
+        "tags": [
+          "districts"
+        ],
+        "summary": "Return list of districts.",
+        "operationId": "listDistricts",
+        "responses": {
+          "200": {
+            "$ref": "#/responses/districtsResp"
+          },
+          "400": {
+            "$ref": "#/responses/badReq"
+          },
+          "404": {
+            "$ref": "#/responses/notFound"
+          },
+          "500": {
+            "$ref": "#/responses/districtsResp"
+          }
+        }
+      }
+    },
+    "/districts/with/province/{provinceId}": {
+      "get": {
+        "description": "Get the district entity by Province id.",
+        "tags": [
+          "districts"
+        ],
+        "summary": "Return districts by Province id",
+        "operationId": "getDistrictByProvinceID",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "ID of the province",
+            "name": "provinceId",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/districtsResp"
+          },
+          "400": {
+            "$ref": "#/responses/badReq"
+          },
+          "404": {
+            "$ref": "#/responses/notFound"
+          },
+          "500": {
+            "$ref": "#/responses/districtsResp"
+          }
+        }
+      }
+    },
+    "/expertiseCompetencies": {
+      "get": {
+        "description": "Get the expertise competency entities.",
+        "tags": [
+          "expertiseCompetencies"
+        ],
+        "summary": "Return list of expertise competencies.",
+        "operationId": "listExpertisePrograms",
+        "responses": {
+          "200": {
+            "$ref": "#/responses/expertiseCompetenciesResp"
+          },
+          "400": {
+            "$ref": "#/responses/badReq"
+          },
+          "404": {
+            "$ref": "#/responses/notFound"
+          },
+          "500": {
+            "$ref": "#/responses/expertiseCompetenciesResp"
+          }
+        }
+      }
+    },
+    "/expertiseCompetencies/with/expertiseProgram/{programId}": {
+      "get": {
+        "description": "Get the expertise competencies entity by program id.",
+        "tags": [
+          "expertiseCompetencies"
+        ],
+        "summary": "Return expertise competencies by program id",
+        "operationId": "getExpertiseProgramsByFieldId",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "ID of the program",
+            "name": "programId",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/expertiseCompetenciesResp"
+          },
+          "400": {
+            "$ref": "#/responses/badReq"
+          },
+          "404": {
+            "$ref": "#/responses/notFound"
+          },
+          "500": {
+            "$ref": "#/responses/expertiseCompetenciesResp"
+          }
+        }
+      }
+    },
+    "/expertiseFields": {
+      "get": {
+        "description": "Get the expertise field entities.",
+        "tags": [
+          "expertiseFields"
+        ],
+        "summary": "Return list of expertise fields.",
+        "operationId": "listExpertiseFields",
+        "responses": {
+          "200": {
+            "$ref": "#/responses/expertiseFieldResp"
+          },
+          "400": {
+            "$ref": "#/responses/badReq"
+          },
+          "404": {
+            "$ref": "#/responses/notFound"
+          },
+          "500": {
+            "$ref": "#/responses/expertiseFieldResp"
+          }
+        }
+      }
+    },
+    "/expertiseFields/curriculumStructure": {
+      "get": {
+        "description": "Get the curriculum structure field entities.",
+        "tags": [
+          "expertiseFields"
+        ],
+        "summary": "Return list of curriculum structure.",
+        "operationId": "listCurriculumStructure",
+        "responses": {
+          "200": {
+            "$ref": "#/responses/curriculumStructureResp"
+          },
+          "400": {
+            "$ref": "#/responses/badReq"
+          },
+          "404": {
+            "$ref": "#/responses/notFound"
+          },
+          "500": {
+            "$ref": "#/responses/curriculumStructureResp"
+          }
+        }
+      }
+    },
+    "/expertisePrograms": {
+      "get": {
+        "description": "Get the expertise program entities.",
+        "tags": [
+          "expertisePrograms"
+        ],
+        "summary": "Return list of expertise programs.",
+        "operationId": "listExpertisePrograms",
+        "responses": {
+          "200": {
+            "$ref": "#/responses/expertiseProgramsResp"
+          },
+          "400": {
+            "$ref": "#/responses/badReq"
+          },
+          "404": {
+            "$ref": "#/responses/notFound"
+          },
+          "500": {
+            "$ref": "#/responses/expertiseProgramsResp"
+          }
+        }
+      }
+    },
+    "/expertisePrograms/with/expertiseField/{fieldId}": {
+      "get": {
+        "description": "Get the expertise program entity by field id.",
+        "tags": [
+          "expertisePrograms"
+        ],
+        "summary": "Return expertise program by field id",
+        "operationId": "getExpertiseProgramsByFieldId",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "ID of the field",
+            "name": "fieldId",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/expertiseProgramsResp"
+          },
+          "400": {
+            "$ref": "#/responses/badReq"
+          },
+          "404": {
+            "$ref": "#/responses/notFound"
+          },
+          "500": {
+            "$ref": "#/responses/expertiseProgramsResp"
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "description": "Get the status of the service health.",
+        "tags": [
+          "systems"
+        ],
+        "summary": "Return the status of the service health.",
+        "operationId": "systemHealth",
+        "responses": {
+          "200": {
+            "$ref": "#/responses/healthResp"
+          },
+          "400": {
+            "$ref": "#/responses/badReq"
+          },
+          "404": {
+            "$ref": "#/responses/notFound"
+          },
+          "500": {
+            "$ref": "#/responses/healthResp"
+          }
+        }
+      }
+    },
+    "/provinces": {
+      "get": {
+        "description": "Get the province entities.",
+        "tags": [
+          "provinces"
+        ],
+        "summary": "Return list of provinces.",
+        "operationId": "listProvinces",
+        "responses": {
+          "200": {
+            "$ref": "#/responses/provinceResp"
+          },
+          "400": {
+            "$ref": "#/responses/badReq"
+          },
+          "404": {
+            "$ref": "#/responses/notFound"
+          },
+          "500": {
+            "$ref": "#/responses/provinceResp"
+          }
+        }
+      }
+    },
+    "/schools": {
+      "get": {
+        "description": "Get the school entities with paging.",
+        "tags": [
+          "schools"
+        ],
+        "summary": "Return list of schools with paging.",
+        "operationId": "listSchools",
+        "parameters": [
+          {
+            "pattern": "^\\d+$",
+            "type": "string",
+            "x-go-name": "Page",
+            "description": "schools page param",
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "pattern": "^\\d+$",
+            "type": "string",
+            "x-go-name": "PageSize",
+            "description": "schools page size param",
+            "name": "pageSize",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "x-go-name": "DistrictID",
+            "description": "schools district id param",
+            "name": "districtID",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/schoolPagingResp"
+          },
+          "400": {
+            "$ref": "#/responses/badReq"
+          },
+          "404": {
+            "$ref": "#/responses/notFound"
+          },
+          "500": {
+            "$ref": "#/responses/schoolPagingResp"
+          }
+        }
+      }
+    },
+    "/schools/all": {
+      "get": {
+        "description": "Get the school entities without paging.",
+        "tags": [
+          "schools"
+        ],
+        "summary": "Return list of schools without paging.",
+        "operationId": "listAllSchools",
+        "responses": {
+          "200": {
+            "$ref": "#/responses/schoolResp"
+          },
+          "400": {
+            "$ref": "#/responses/badReq"
+          },
+          "404": {
+            "$ref": "#/responses/notFound"
+          },
+          "500": {
+            "$ref": "#/responses/schoolResp"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Contact": {
+      "description": "Contact model and json tag",
+      "type": "object",
+      "properties": {
+        "address": {
+          "type": "string",
+          "x-go-name": "Address"
+        },
+        "district": {
+          "type": "string",
+          "x-go-name": "District"
+        },
+        "district_id": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "DistrictID"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "ID"
+        },
+        "name": {
+          "type": "string",
+          "x-go-name": "Name"
+        },
+        "phone": {
+          "type": "string",
+          "x-go-name": "Phone"
+        }
+      },
+      "x-go-package": "github.com/dwhub/kurikulumsmkapi/models"
+    },
+    "ContactPaging": {
+      "description": "ContactPaging contact model with paging",
+      "type": "object",
+      "properties": {
+        "contacts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Contact"
+          },
+          "x-go-name": "Contacts"
+        },
+        "paging": {
+          "$ref": "#/definitions/Paging"
+        }
+      },
+      "x-go-package": "github.com/dwhub/kurikulumsmkapi/models"
+    },
+    "District": {
+      "description": "District model and json tag",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "ID"
+        },
+        "name": {
+          "type": "string",
+          "x-go-name": "Name"
+        },
+        "province": {
+          "type": "string",
+          "x-go-name": "Province"
+        },
+        "province_id": {
+          "type": "string",
+          "x-go-name": "ProvinceID"
+        }
+      },
+      "x-go-package": "github.com/dwhub/kurikulumsmkapi/models"
+    },
+    "ExpertiseCompetency": {
+      "description": "ExpertiseCompetency model and json tag",
+      "type": "object",
+      "properties": {
+        "duration": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "Duration"
+        },
+        "expertis_program_id": {
+          "type": "string",
+          "x-go-name": "ExpertiseProgramID"
+        },
+        "expertise_program": {
+          "type": "string",
+          "x-go-name": "ExpertiseProgram"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "ID"
+        },
+        "name": {
+          "type": "string",
+          "x-go-name": "Name"
+        },
+        "order": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "Order"
+        }
+      },
+      "x-go-package": "github.com/dwhub/kurikulumsmkapi/models"
+    },
+    "ExpertiseField": {
+      "description": "ExpertiseField model and json tag",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "ID"
+        },
+        "name": {
+          "type": "string",
+          "x-go-name": "Name"
+        },
+        "order": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "Order"
+        }
+      },
+      "x-go-package": "github.com/dwhub/kurikulumsmkapi/models"
+    },
+    "ExpertiseProgram": {
+      "description": "ExpertiseProgram model and json tag",
+      "type": "object",
+      "properties": {
+        "expertis_field_id": {
+          "type": "string",
+          "x-go-name": "ExpertiseFieldID"
+        },
+        "expertise_field": {
+          "type": "string",
+          "x-go-name": "ExpertiseField"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "ID"
+        },
+        "name": {
+          "type": "string",
+          "x-go-name": "Name"
+        },
+        "order": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "Order"
+        }
+      },
+      "x-go-package": "github.com/dwhub/kurikulumsmkapi/models"
+    },
+    "ExpertiseStructure": {
+      "description": "ExpertiseStructure data as composite",
+      "type": "object",
+      "properties": {
+        "child": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ExpertiseStructure"
+          },
+          "x-go-name": "Child"
+        },
+        "child_id": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "ChildID"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "ID"
+        },
+        "name": {
+          "type": "string",
+          "x-go-name": "Name"
+        },
+        "parent_id": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "ParentID"
+        }
+      },
+      "x-go-package": "github.com/dwhub/kurikulumsmkapi/models"
+    },
+    "Paging": {
+      "description": "Paging fields",
+      "type": "object",
+      "properties": {
+        "page": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "Page"
+        },
+        "size": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "Size"
+        },
+        "total": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "Total"
+        }
+      },
+      "x-go-package": "github.com/dwhub/kurikulumsmkapi/models"
+    },
+    "Province": {
+      "description": "Province model and json tag",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "ID"
+        },
+        "name": {
+          "type": "string",
+          "x-go-name": "Name"
+        },
+        "order": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "Order"
+        }
+      },
+      "x-go-package": "github.com/dwhub/kurikulumsmkapi/models"
+    },
+    "School": {
+      "description": "School model and json tag",
+      "type": "object",
+      "properties": {
+        "address": {
+          "type": "string",
+          "x-go-name": "Address"
+        },
+        "district": {
+          "type": "string",
+          "x-go-name": "District"
+        },
+        "district_id": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "DistrictID"
+        },
+        "fax": {
+          "type": "string",
+          "x-go-name": "Fax"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "ID"
+        },
+        "name": {
+          "type": "string",
+          "x-go-name": "Name"
+        },
+        "npsn": {
+          "type": "string",
+          "x-go-name": "NPSN"
+        },
+        "phone": {
+          "type": "string",
+          "x-go-name": "Phone"
+        },
+        "status": {
+          "type": "string",
+          "x-go-name": "Status"
+        },
+        "sub_district": {
+          "type": "string",
+          "x-go-name": "SubDistrict"
+        }
+      },
+      "x-go-package": "github.com/dwhub/kurikulumsmkapi/models"
+    },
+    "SchoolPaging": {
+      "description": "SchoolPaging school model with paging",
+      "type": "object",
+      "properties": {
+        "paging": {
+          "$ref": "#/definitions/Paging"
+        },
+        "schools": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/School"
+          },
+          "x-go-name": "Schools"
+        }
+      },
+      "x-go-package": "github.com/dwhub/kurikulumsmkapi/models"
+    },
+    "System": {
+      "description": "System model and json tag",
+      "type": "object",
+      "properties": {
+        "database": {
+          "type": "string",
+          "x-go-name": "Database"
+        },
+        "status": {
+          "type": "string",
+          "x-go-name": "Status"
+        }
+      },
+      "x-go-package": "github.com/dwhub/kurikulumsmkapi/models"
+    }
+  },
+  "responses": {
+    "badReq": {
+      "description": "Error Bad Request",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "description": "HTTP status code 400 - Status Bad Request",
+            "type": "integer",
+            "format": "int64",
+            "x-go-name": "Code"
+          },
+          "message": {
+            "description": "Detailed error message",
+            "type": "string",
+            "x-go-name": "Message"
+          }
+        }
+      }
+    },
+    "bool": {
+      "description": "Boolean response",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "description": "HTTP Status Code 200",
+            "type": "integer",
+            "format": "int64",
+            "x-go-name": "Code"
+          },
+          "message": {
+            "description": "Boolean true/false",
+            "type": "boolean",
+            "x-go-name": "Message"
+          }
+        }
+      }
+    },
+    "conflict": {
+      "description": "Error Conflict",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "description": "HTTP status code 409 - Conflict",
+            "type": "integer",
+            "format": "int64",
+            "x-go-name": "Code"
+          },
+          "message": {
+            "description": "Detailed error message",
+            "type": "string",
+            "x-go-name": "Message"
+          }
+        }
+      }
+    },
+    "contactPagingResp": {
+      "description": "SwaggContactPagingResp HTTP status code and contact paging model in message",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "description": "HTTP status code",
+            "type": "integer",
+            "format": "int64",
+            "x-go-name": "Code"
+          },
+          "message": {
+            "$ref": "#/definitions/ContactPaging"
+          }
+        }
+      }
+    },
+    "contactResp": {
+      "description": "SwaggContactResp HTTP status code and contact model in message",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "description": "HTTP status code",
+            "type": "integer",
+            "format": "int64",
+            "x-go-name": "Code"
+          },
+          "message": {
+            "description": "Contact model",
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/Contact"
+            },
+            "x-go-name": "Message"
+          }
+        }
+      }
+    },
+    "curriculumStructureResp": {
+      "description": "SwaggCurriculumStructureResp HTTP status code and expertise fields model in message",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "description": "HTTP status code",
+            "type": "integer",
+            "format": "int64",
+            "x-go-name": "Code"
+          },
+          "message": {
+            "description": "Curriculum structure fields model",
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/ExpertiseStructure"
+            },
+            "x-go-name": "Message"
+          }
+        }
+      }
+    },
+    "districtsResp": {
+      "description": "SwaggDistrictsResp HTTP status code and districts model in message",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "description": "HTTP status code",
+            "type": "integer",
+            "format": "int64",
+            "x-go-name": "Code"
+          },
+          "message": {
+            "description": "Province model",
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/District"
+            },
+            "x-go-name": "Message"
+          }
+        }
+      }
+    },
+    "expertiseCompetenciesResp": {
+      "description": "SwaggExpertiseCompetenciesResp HTTP status code and expertise competencies model in message",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "description": "HTTP status code",
+            "type": "integer",
+            "format": "int64",
+            "x-go-name": "Code"
+          },
+          "message": {
+            "description": "Expertise fields model",
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/ExpertiseCompetency"
+            },
+            "x-go-name": "Message"
+          }
+        }
+      }
+    },
+    "expertiseFieldResp": {
+      "description": "SwaggExpertiseFieldsResp HTTP status code and expertise fields model in message",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "description": "HTTP status code",
+            "type": "integer",
+            "format": "int64",
+            "x-go-name": "Code"
+          },
+          "message": {
+            "description": "Expertise fields model",
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/ExpertiseField"
+            },
+            "x-go-name": "Message"
+          }
+        }
+      }
+    },
+    "expertiseProgramsResp": {
+      "description": "SwaggExpertiseProgramsResp HTTP status code and expertise program model in message",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "description": "HTTP status code",
+            "type": "integer",
+            "format": "int64",
+            "x-go-name": "Code"
+          },
+          "message": {
+            "description": "Expertise Program model",
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/ExpertiseProgram"
+            },
+            "x-go-name": "Message"
+          }
+        }
+      }
+    },
+    "forbidden": {
+      "description": "Error Forbidden",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "description": "HTTP status code 403 - Forbidden",
+            "type": "integer",
+            "format": "int64",
+            "x-go-name": "Code"
+          },
+          "message": {
+            "description": "Detailed error message",
+            "type": "string",
+            "x-go-name": "Message"
+          }
+        }
+      }
+    },
+    "healthResp": {
+      "description": "SwaggHealthResp HTTP status code and system model in message",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "description": "HTTP status code",
+            "type": "integer",
+            "format": "int64",
+            "x-go-name": "Code"
+          },
+          "message": {
+            "$ref": "#/definitions/System"
+          }
+        }
+      }
+    },
+    "internal": {
+      "description": "Error Interval Server",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "description": "HTTP status code 500 - Internal server error",
+            "type": "integer",
+            "format": "int64",
+            "x-go-name": "Code"
+          },
+          "message": {
+            "description": "Detailed error message",
+            "type": "string",
+            "x-go-name": "Message"
+          }
+        }
+      }
+    },
+    "notFound": {
+      "description": "Error Not Found",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "description": "HTTP status code 404 - Not Found",
+            "type": "integer",
+            "format": "int64",
+            "x-go-name": "Code"
+          },
+          "message": {
+            "description": "Detailed error message",
+            "type": "string",
+            "x-go-name": "Message"
+          }
+        }
+      }
+    },
+    "ok": {
+      "description": "Success response",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "description": "HTTP Status Code 200",
+            "type": "integer",
+            "format": "int64",
+            "x-go-name": "Code"
+          }
+        }
+      }
+    },
+    "provinceResp": {
+      "description": "SwaggProvinceResp HTTP status code and province model in message",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "description": "HTTP status code",
+            "type": "integer",
+            "format": "int64",
+            "x-go-name": "Code"
+          },
+          "message": {
+            "description": "Province model",
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/Province"
+            },
+            "x-go-name": "Message"
+          }
+        }
+      }
+    },
+    "schoolPagingResp": {
+      "description": "SwaggSchoolPagingResp HTTP status code and school paging model in message",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "description": "HTTP status code",
+            "type": "integer",
+            "format": "int64",
+            "x-go-name": "Code"
+          },
+          "message": {
+            "$ref": "#/definitions/SchoolPaging"
+          }
+        }
+      }
+    },
+    "schoolResp": {
+      "description": "SwaggSchoolResp HTTP status code and school model in message",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "description": "HTTP status code",
+            "type": "integer",
+            "format": "int64",
+            "x-go-name": "Code"
+          },
+          "message": {
+            "description": "Contact model",
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/School"
+            },
+            "x-go-name": "Message"
+          }
+        }
+      }
+    }
+  }
+}
