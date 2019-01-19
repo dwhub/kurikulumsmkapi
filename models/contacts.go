@@ -26,16 +26,26 @@ type ContactPaging struct {
 	Paging   Paging    `json:"paging"`
 }
 
-var contactBaseQuery = `SELECT a.id_contact, a.id_kabupaten, b.kabupaten, a.nama_contact, a.no_telp, a.alamat
-						FROM tbl_contact a
+var contactHeaderQuery = "SELECT a.id_contact, a.id_kabupaten, b.kabupaten, a.nama_contact, a.no_telp, a.alamat "
+
+var contactBaseQuery = contactHeaderQuery + `FROM tbl_contact a
 						LEFT JOIN tbl_kabupaten b on a.id_kabupaten = b.id_kabupaten `
+
+var contactWithProvinceQuery = contactHeaderQuery + `FROM tbl_contact a
+						LEFT JOIN tbl_kabupaten b on a.id_kabupaten = b.id_kabupaten 
+						LEFT JOIN tbl_provinsi c on b.id_provinsi = c.id_provinsi `
 
 var contactPagingQuery = `LIMIT ? OFFSET ?`
 
 var contactGetTotalRowsQuery = `SELECT COUNT(id_contact) FROM tbl_contact `
 
+var contactWithProvinceGetTotalQuery = `SELECT COUNT(id_contact)
+						FROM tbl_contact a
+						LEFT JOIN tbl_kabupaten b on a.id_kabupaten = b.id_kabupaten 
+						LEFT JOIN tbl_provinsi c on b.id_provinsi = c.id_provinsi `
+
 // GetContacts fetch contacts with paging
-func GetContacts(page int, pageSize int, districtID int) map[string]interface{} {
+func GetContacts(page int, pageSize int, provinceID int, districtID int) map[string]interface{} {
 	var (
 		contact       Contact
 		contactPaging ContactPaging
@@ -46,7 +56,11 @@ func GetContacts(page int, pageSize int, districtID int) map[string]interface{} 
 	if districtID > 0 {
 		row = db.QueryRow(contactGetTotalRowsQuery+"where id_kabupaten = ?", districtID)
 	} else {
-		row = db.QueryRow(contactGetTotalRowsQuery)
+		if provinceID > 0 {
+			row = db.QueryRow(contactWithProvinceGetTotalQuery+"where c.id_provinsi = ?", provinceID)
+		} else {
+			row = db.QueryRow(contactGetTotalRowsQuery)
+		}
 	}
 
 	var totalRow int
@@ -77,7 +91,11 @@ func GetContacts(page int, pageSize int, districtID int) map[string]interface{} 
 	if districtID > 0 {
 		rows, err = db.Query(contactBaseQuery+"where a.id_kabupaten = ? "+contactPagingQuery, districtID, pageSize, offset)
 	} else {
-		rows, err = db.Query(contactBaseQuery+contactPagingQuery, pageSize, offset)
+		if provinceID > 0 {
+			rows, err = db.Query(contactWithProvinceQuery+"where c.id_provinsi = ? "+contactPagingQuery, provinceID, pageSize, offset)
+		} else {
+			rows, err = db.Query(contactBaseQuery+contactPagingQuery, pageSize, offset)
+		}
 	}
 
 	if err != nil {

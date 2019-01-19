@@ -17,6 +17,10 @@ type SwaggGetContactParam struct {
 	// items.items.items.pattern: ^\d+$
 	// in: query
 	PageSize string `json:"pageSize"`
+	// contacts province id param
+	//
+	// in: query
+	ProvinceID string `json:"provinceID"`
 	// contacts district id param
 	//
 	// in: query

@@ -46,6 +46,13 @@
           },
           {
             "type": "string",
+            "x-go-name": "ProvinceID",
+            "description": "contacts province id param",
+            "name": "provinceID",
+            "in": "query"
+          },
+          {
+            "type": "string",
             "x-go-name": "DistrictID",
             "description": "contacts district id param",
             "name": "districtID",
@@ -596,17 +603,12 @@
       "description": "ExpertiseStructure data as composite",
       "type": "object",
       "properties": {
-        "child": {
+        "children": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/ExpertiseStructure"
           },
-          "x-go-name": "Child"
-        },
-        "child_id": {
-          "type": "integer",
-          "format": "int64",
-          "x-go-name": "ChildID"
+          "x-go-name": "Children"
         },
         "id": {
           "type": "integer",
