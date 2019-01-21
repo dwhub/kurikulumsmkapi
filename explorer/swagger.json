@@ -99,6 +99,46 @@
         }
       }
     },
+    "/course/duration/with/competency/{competencyId}/group/{groupId}": {
+      "get": {
+        "description": "Get the course duration entity by Competency and Group id.",
+        "tags": [
+          "course"
+        ],
+        "summary": "Return course duration by Competency and Group id",
+        "operationId": "getCourseDurations",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "ID of the competency",
+            "name": "competencyId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "integer",
+            "description": "ID of the group",
+            "name": "groupId",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/courseDurationResp"
+          },
+          "400": {
+            "$ref": "#/responses/badReq"
+          },
+          "404": {
+            "$ref": "#/responses/notFound"
+          },
+          "500": {
+            "$ref": "#/responses/courseDurationResp"
+          }
+        }
+      }
+    },
     "/districts": {
       "get": {
         "description": "Get the district entities.",
@@ -396,6 +436,27 @@
             "x-go-name": "DistrictID",
             "description": "schools district id param",
             "name": "districtID",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "x-go-name": "ProvinceID",
+            "description": "schools province id param",
+            "name": "provinceID",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "x-go-name": "CompetencyID",
+            "description": "schools competency id param",
+            "name": "competencyID",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "x-go-name": "SchoolType",
+            "description": "schools type param",
+            "name": "schoolType",
             "in": "query"
           }
         ],
@@ -708,6 +769,10 @@
           "type": "string",
           "x-go-name": "Phone"
         },
+        "province": {
+          "type": "string",
+          "x-go-name": "Province"
+        },
         "status": {
           "type": "string",
           "x-go-name": "Status"
@@ -843,6 +908,28 @@
             "type": "array",
             "items": {
               "$ref": "#/definitions/Contact"
+            },
+            "x-go-name": "Message"
+          }
+        }
+      }
+    },
+    "courseDurationResp": {
+      "description": "SwaggCourseDurationResp HTTP status code and course duration model in message",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "description": "HTTP status code",
+            "type": "integer",
+            "format": "int64",
+            "x-go-name": "Code"
+          },
+          "message": {
+            "description": "Province model",
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/District"
             },
             "x-go-name": "Message"
           }

@@ -21,6 +21,18 @@ type SwaggGetSchoolsParam struct {
 	//
 	// in: query
 	DistrictID string `json:"districtID"`
+	// schools province id param
+	//
+	// in: query
+	ProvinceID string `json:"provinceID"`
+	// schools competency id param
+	//
+	// in: query
+	CompetencyID string `json:"competencyID"`
+	// schools type param
+	//
+	// in: query
+	SchoolType string `json:"schoolType"`
 }
 
 // SwaggSchoolResp HTTP status code and school model in message

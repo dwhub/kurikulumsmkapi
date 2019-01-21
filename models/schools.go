@@ -22,6 +22,7 @@ type School struct {
 	SubDistrict string `json:"sub_district"`
 	Phone       string `json:"phone"`
 	Fax         string `json:"fax"`
+	Province    string `json:"province"`
 }
 
 // SchoolPaging school model with paging
@@ -31,16 +32,30 @@ type SchoolPaging struct {
 }
 
 var schoolBaseQuery = `SELECT a.id_sekolah, a.id_kabupaten, b.kabupaten, a.npsn, a.nama_sekolah, a.status,
-						a.alamat_sekolah, a.kec_sekolah, a.no_telp_sekolah, a.no_fax_sekolah
+						a.alamat_sekolah, a.kec_sekolah, a.no_telp_sekolah, a.no_fax_sekolah, c.provinsi
 						FROM tbl_sekolah a
-						LEFT JOIN tbl_kabupaten b on a.id_kabupaten = b.id_kabupaten `
+						LEFT JOIN tbl_kabupaten b on a.id_kabupaten = b.id_kabupaten
+						LEFT JOIN tbl_provinsi c on b.id_provinsi = c.id_provinsi `
 
-var schoolPagingQuery = `LIMIT ? OFFSET ?`
+var schoolFilterQuery = `SELECT DISTINCT a.id_sekolah, a.id_kabupaten, b.kabupaten, a.npsn, a.nama_sekolah, a.status,
+							a.alamat_sekolah, a.kec_sekolah, a.no_telp_sekolah, a.no_fax_sekolah, c.provinsi
+							FROM tbl_sekolah a
+							LEFT JOIN tbl_kabupaten b on a.id_kabupaten = b.id_kabupaten
+							LEFT JOIN tbl_provinsi c on b.id_provinsi = c.id_provinsi
+							LEFT JOIN tbl_kompetensi_sekolah d on a.id_sekolah = d.id_sekolah `
+
+var schoolPagingQuery = ` LIMIT ? OFFSET ? `
 
 var schoolGetTotalRowsQuery = `SELECT COUNT(id_sekolah) FROM tbl_sekolah `
 
+var schoolFilterGetTotalRowsQuery = `SELECT COUNT(DISTINCT a.id_sekolah)
+										FROM tbl_sekolah a 
+										LEFT JOIN tbl_kabupaten b on a.id_kabupaten = b.id_kabupaten
+										LEFT JOIN tbl_provinsi c on b.id_provinsi = c.id_provinsi
+										LEFT JOIN tbl_kompetensi_sekolah d on a.id_sekolah = d.id_sekolah `
+
 // GetSchools fetch schools with paging
-func GetSchools(page int, pageSize int, districtID int) map[string]interface{} {
+func GetSchools(page int, pageSize int, districtID int, provinceID int, competencyID int, schoolType int) map[string]interface{} {
 	var (
 		school       School
 		schoolPaging SchoolPaging
@@ -48,10 +63,43 @@ func GetSchools(page int, pageSize int, districtID int) map[string]interface{} {
 
 	var row *sql.Row
 
+	var districtFilter = ""
 	if districtID > 0 {
-		row = db.QueryRow(schoolGetTotalRowsQuery+"where id_kabupaten = ?", districtID)
+		districtFilter = " b.id_kabupaten = ? "
+	}
+
+	var provinceFilter = ""
+	if provinceID > 0 {
+		provinceFilter = " c.id_provinsi = ? "
+	}
+
+	var competencyFilter = ""
+	if competencyID > 0 {
+		competencyFilter = " d.id_kompetensi = ? "
+	}
+
+	var schoolTypeFilter = ""
+
+	if schoolType == 1 {
+		schoolTypeFilter = " AND a.status = 'Negeri' "
+	} else if schoolType == 2 {
+		schoolTypeFilter = " AND a.status = 'Swasta' "
+	}
+
+	if districtID == 0 && provinceID == 0 && competencyID == 0 && schoolType == 0 {
+		row = db.QueryRow(schoolFilterGetTotalRowsQuery)
 	} else {
-		row = db.QueryRow(schoolGetTotalRowsQuery)
+		if districtID > 0 && competencyID == 0 {
+			row = db.QueryRow(schoolFilterGetTotalRowsQuery+"where "+districtFilter+schoolTypeFilter, districtID)
+		} else if districtID == 0 && provinceID > 0 && competencyID == 0 {
+			row = db.QueryRow(schoolFilterGetTotalRowsQuery+"where "+provinceFilter+schoolTypeFilter, provinceID)
+		} else if districtID == 0 && provinceID == 0 && competencyID > 0 {
+			row = db.QueryRow(schoolFilterGetTotalRowsQuery+"where "+competencyFilter+schoolTypeFilter, competencyID)
+		} else if districtID == 0 && provinceID > 0 && competencyID > 0 {
+			row = db.QueryRow(schoolFilterGetTotalRowsQuery+"where "+provinceFilter+" AND "+competencyFilter+schoolTypeFilter, provinceID, competencyID)
+		} else if districtID > 0 && competencyID > 0 {
+			row = db.QueryRow(schoolFilterGetTotalRowsQuery+"where "+districtFilter+" AND "+competencyFilter+schoolTypeFilter, districtID, competencyID)
+		}
 	}
 
 	var totalRow int
@@ -79,10 +127,20 @@ func GetSchools(page int, pageSize int, districtID int) map[string]interface{} {
 
 	var rows *sql.Rows
 
-	if districtID > 0 {
-		rows, err = db.Query(schoolBaseQuery+"where a.id_kabupaten = ? "+schoolPagingQuery, districtID, pageSize, offset)
+	if districtID == 0 && provinceID == 0 && competencyID == 0 && schoolType == 0 {
+		rows, err = db.Query(schoolFilterQuery+schoolPagingQuery, pageSize, offset)
 	} else {
-		rows, err = db.Query(schoolBaseQuery+schoolPagingQuery, pageSize, offset)
+		if districtID > 0 && competencyID == 0 {
+			rows, err = db.Query(schoolFilterQuery+"where "+districtFilter+schoolTypeFilter+schoolPagingQuery, districtID, pageSize, offset)
+		} else if districtID == 0 && provinceID > 0 && competencyID == 0 {
+			rows, err = db.Query(schoolFilterQuery+"where "+provinceFilter+schoolTypeFilter+schoolPagingQuery, provinceID, pageSize, offset)
+		} else if districtID == 0 && provinceID == 0 && competencyID > 0 {
+			rows, err = db.Query(schoolFilterQuery+"where "+competencyFilter+schoolTypeFilter+schoolPagingQuery, competencyID, pageSize, offset)
+		} else if districtID == 0 && provinceID > 0 && competencyID > 0 {
+			rows, err = db.Query(schoolFilterQuery+"where "+provinceFilter+" AND "+competencyFilter+schoolTypeFilter+schoolPagingQuery, provinceID, competencyID, pageSize, offset)
+		} else if districtID > 0 && competencyID > 0 {
+			rows, err = db.Query(schoolFilterQuery+"where "+districtFilter+" AND "+competencyFilter+schoolTypeFilter+schoolPagingQuery, districtID, competencyID, pageSize, offset)
+		}
 	}
 
 	if err != nil {
@@ -96,7 +154,7 @@ func GetSchools(page int, pageSize int, districtID int) map[string]interface{} {
 
 	for rows.Next() {
 		err = rows.Scan(&school.ID, &school.DistrictID, &school.District, &school.NPSN, &school.Name,
-			&school.Status, &school.Address, &school.SubDistrict, &school.Phone, &school.Fax)
+			&school.Status, &school.Address, &school.SubDistrict, &school.Phone, &school.Fax, &school.Province)
 		schoolPaging.Schools = append(schoolPaging.Schools, school)
 		if err != nil {
 			fmt.Print(err.Error())
@@ -130,7 +188,7 @@ func GetAllSchools() map[string]interface{} {
 
 	for rows.Next() {
 		err = rows.Scan(&school.ID, &school.DistrictID, &school.District, &school.NPSN, &school.Name,
-			&school.Status, &school.Address, &school.SubDistrict, &school.Phone, &school.Fax)
+			&school.Status, &school.Address, &school.SubDistrict, &school.Phone, &school.Fax, &school.Province)
 		schools = append(schools, school)
 		if err != nil {
 			fmt.Print(err.Error())

@@ -14,16 +14,31 @@ var GetSchools = func(w http.ResponseWriter, r *http.Request) {
 	var pageSize int
 	var page int
 	var districtID int
+	var provinceID int
+	var competencyID int
+	var schoolType int
 	var err error
 
 	pageSizeParam := r.URL.Query().Get("pageSize")
 	pageParam := r.URL.Query().Get("page")
 	districtIDParam := r.URL.Query().Get("districtID")
+	provinceIDParam := r.URL.Query().Get("provinceID")
+	competencyIDParam := r.URL.Query().Get("competencyID")
+	schoolTypeParam := r.URL.Query().Get("schoolType")
 
 	pageSize, err = strconv.Atoi(pageSizeParam)
 	page, err = strconv.Atoi(pageParam)
 	if len(districtIDParam) > 0 {
 		districtID, err = strconv.Atoi(districtIDParam)
+	}
+	if len(provinceIDParam) > 0 {
+		provinceID, err = strconv.Atoi(provinceIDParam)
+	}
+	if len(competencyIDParam) > 0 {
+		competencyID, err = strconv.Atoi(competencyIDParam)
+	}
+	if len(schoolTypeParam) > 0 {
+		schoolType, err = strconv.Atoi(schoolTypeParam)
 	}
 
 	if err != nil {
@@ -39,7 +54,7 @@ var GetSchools = func(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	u.Respond(w, models.GetSchools(page, pageSize, districtID))
+	u.Respond(w, models.GetSchools(page, pageSize, districtID, provinceID, competencyID, schoolType))
 }
 
 // GetAllSchools controller to get all schools entities without paging
