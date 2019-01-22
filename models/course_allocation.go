@@ -15,7 +15,7 @@ type CourseAllocation struct {
 	Group          int    `json:"group"`
 	CompetencyID   int    `json:"competency_id"`
 	Name           string `json:"name"`
-	TimeAllocation string `json:"time_allocation"`
+	TimeAllocation int    `json:"time_allocation"`
 }
 
 var courseAllocationBaseQuery = `SELECT a.id_mapel, a.urutan_mapel, a.id_grup, a.id_kompetensi, a.nama_mapel, b.alokasi_waktu
