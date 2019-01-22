@@ -621,7 +621,8 @@
           "x-go-name": "Order"
         },
         "time_allocation": {
-          "type": "string",
+          "type": "integer",
+          "format": "int64",
           "x-go-name": "TimeAllocation"
         }
       },
