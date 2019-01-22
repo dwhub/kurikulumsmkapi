@@ -29,6 +29,8 @@ func GetExpertiseCompetencies() map[string]interface{} {
 		expertiseCompetencies []ExpertiseCompetency
 	)
 
+	expertiseCompetencies = []ExpertiseCompetency{}
+
 	rows, err := db.Query(expertiseCompetencyBaseQuery + " ORDER BY a.urutan_kompetensi")
 
 	if err != nil {
@@ -58,6 +60,8 @@ func GetExpertiseCompetenciesByProgramID(expertiseProgramID int) map[string]inte
 		expertiseCompetency   ExpertiseCompetency
 		expertiseCompetencies []ExpertiseCompetency
 	)
+
+	expertiseCompetencies = []ExpertiseCompetency{}
 
 	rows, err := db.Query(expertiseCompetencyBaseQuery+"WHERE a.id_program = ? ORDER BY a.urutan_kompetensi", expertiseProgramID)
 

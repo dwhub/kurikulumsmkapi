@@ -11,7 +11,19 @@ type SwaggCourseDurationResp struct {
 	Body struct {
 		// HTTP status code
 		Code int `json:"code"`
-		// Province model
-		Message []models.District `json:"message"`
+		// Course Duration model
+		Message []models.CourseDuration `json:"message"`
+	}
+}
+
+// SwaggCourseAllocationResp HTTP status code and course allocation model in message
+// swagger:response courseAllocationResp
+type SwaggCourseAllocationResp struct {
+	// in:body
+	Body struct {
+		// HTTP status code
+		Code int `json:"code"`
+		// Course ALlocation model
+		Message []models.CourseAllocation `json:"message"`
 	}
 }

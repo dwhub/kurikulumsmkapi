@@ -1,4 +1,4 @@
-// Golang SwaggerUI for Kurikulum SMK Service
+// Package swagger Kurikulum SMK API.
 //
 //     Schemes: http
 //     BasePath: /v1
@@ -252,3 +252,28 @@ package swagger
 //     "$ref": "#/responses/notFound"
 //   "500":
 //     "$ref": "#/responses/courseDurationResp"
+
+// swagger:operation GET /course/allocation/with/competency/{competencyId}/group/{groupId} course getCourseAllocations
+// ---
+// summary: Return course allocation by Competency and Group id
+// description: Get the course allocation entity by Competency and Group id.
+// parameters:
+// - name: competencyId
+//   in: path
+//   description: ID of the competency
+//   type: integer
+//   required: true
+// - name: groupId
+//   in: path
+//   description: ID of the group
+//   type: integer
+//   required: true
+// responses:
+//   "200":
+//     "$ref": "#/responses/courseAllocationResp"
+//   "400":
+//     "$ref": "#/responses/badReq"
+//   "404":
+//     "$ref": "#/responses/notFound"
+//   "500":
+//     "$ref": "#/responses/courseAllocationResp"

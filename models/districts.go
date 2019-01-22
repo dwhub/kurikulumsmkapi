@@ -27,6 +27,8 @@ func GetAllDistricts() map[string]interface{} {
 		districts []District
 	)
 
+	districts = []District{}
+
 	rows, err := db.Query(districtBaseQuery)
 
 	if err != nil {
@@ -55,6 +57,8 @@ func GetDistrictByProvinceID(provinceID int) map[string]interface{} {
 		district  District
 		districts []District
 	)
+
+	districts = []District{}
 
 	rows, err := db.Query(districtBaseQuery+"where a.id_provinsi = ?", provinceID)
 

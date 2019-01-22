@@ -52,6 +52,8 @@ func GetExpertiseFields() map[string]interface{} {
 		expertiseFields []ExpertiseField
 	)
 
+	expertiseFields = []ExpertiseField{}
+
 	rows, err := db.Query(efieldBaseQuery)
 
 	if err != nil {

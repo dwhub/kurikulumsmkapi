@@ -37,6 +37,8 @@ func GetCourseDurations(competencyID int, groupID int) map[string]interface{} {
 		courseDurations []CourseDuration
 	)
 
+	courseDurations = []CourseDuration{}
+
 	rows, err := db.Query(courseDurationBaseQuery+" WHERE a.id_grup = ? AND a.id_kompetensi = ? ", groupID, competencyID)
 
 	if err != nil {

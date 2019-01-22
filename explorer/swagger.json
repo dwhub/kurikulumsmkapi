@@ -10,7 +10,7 @@
   ],
   "swagger": "2.0",
   "info": {
-    "description": "Golang SwaggerUI for Kurikulum SMK Service",
+    "title": "Kurikulum SMK API.",
     "contact": {
       "name": "Andi Yudistira",
       "email": "andi.yudistira81@gmail.com"
@@ -95,6 +95,46 @@
           },
           "500": {
             "$ref": "#/responses/contactResp"
+          }
+        }
+      }
+    },
+    "/course/allocation/with/competency/{competencyId}/group/{groupId}": {
+      "get": {
+        "description": "Get the course allocation entity by Competency and Group id.",
+        "tags": [
+          "course"
+        ],
+        "summary": "Return course allocation by Competency and Group id",
+        "operationId": "getCourseAllocations",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "ID of the competency",
+            "name": "competencyId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "integer",
+            "description": "ID of the group",
+            "name": "groupId",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/courseAllocationResp"
+          },
+          "400": {
+            "$ref": "#/responses/badReq"
+          },
+          "404": {
+            "$ref": "#/responses/notFound"
+          },
+          "500": {
+            "$ref": "#/responses/courseAllocationResp"
           }
         }
       }
@@ -552,6 +592,104 @@
       },
       "x-go-package": "github.com/dwhub/kurikulumsmkapi/models"
     },
+    "CourseAllocation": {
+      "description": "CourseAllocation model and json tag",
+      "type": "object",
+      "properties": {
+        "competency_id": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "CompetencyID"
+        },
+        "group": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "Group"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "ID"
+        },
+        "name": {
+          "type": "string",
+          "x-go-name": "Name"
+        },
+        "order": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "Order"
+        },
+        "time_allocation": {
+          "type": "string",
+          "x-go-name": "TimeAllocation"
+        }
+      },
+      "x-go-package": "github.com/dwhub/kurikulumsmkapi/models"
+    },
+    "CourseDuration": {
+      "description": "CourseDuration model and json tag",
+      "type": "object",
+      "properties": {
+        "competency_id": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "CompetencyID"
+        },
+        "group": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "Group"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "ID"
+        },
+        "name": {
+          "type": "string",
+          "x-go-name": "Name"
+        },
+        "order": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "Order"
+        },
+        "x1": {
+          "type": "string",
+          "x-go-name": "X1"
+        },
+        "x2": {
+          "type": "string",
+          "x-go-name": "X2"
+        },
+        "xi1": {
+          "type": "string",
+          "x-go-name": "XI1"
+        },
+        "xi2": {
+          "type": "string",
+          "x-go-name": "XI2"
+        },
+        "xii1": {
+          "type": "string",
+          "x-go-name": "XII1"
+        },
+        "xii2": {
+          "type": "string",
+          "x-go-name": "XII2"
+        },
+        "xiii1": {
+          "type": "string",
+          "x-go-name": "XIII1"
+        },
+        "xiii2": {
+          "type": "string",
+          "x-go-name": "XIII2"
+        }
+      },
+      "x-go-package": "github.com/dwhub/kurikulumsmkapi/models"
+    },
     "District": {
       "description": "District model and json tag",
       "type": "object",
@@ -914,6 +1052,28 @@
         }
       }
     },
+    "courseAllocationResp": {
+      "description": "SwaggCourseAllocationResp HTTP status code and course allocation model in message",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "description": "HTTP status code",
+            "type": "integer",
+            "format": "int64",
+            "x-go-name": "Code"
+          },
+          "message": {
+            "description": "Course ALlocation model",
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/CourseAllocation"
+            },
+            "x-go-name": "Message"
+          }
+        }
+      }
+    },
     "courseDurationResp": {
       "description": "SwaggCourseDurationResp HTTP status code and course duration model in message",
       "schema": {
@@ -926,10 +1086,10 @@
             "x-go-name": "Code"
           },
           "message": {
-            "description": "Province model",
+            "description": "Course Duration model",
             "type": "array",
             "items": {
-              "$ref": "#/definitions/District"
+              "$ref": "#/definitions/CourseDuration"
             },
             "x-go-name": "Message"
           }

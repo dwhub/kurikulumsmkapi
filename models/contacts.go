@@ -51,6 +51,8 @@ func GetContacts(page int, pageSize int, provinceID int, districtID int) map[str
 		contactPaging ContactPaging
 	)
 
+	contactPaging.Contacts = []Contact{}
+
 	var row *sql.Row
 
 	if districtID > 0 {

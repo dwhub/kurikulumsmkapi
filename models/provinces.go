@@ -25,6 +25,8 @@ func GetAllProvinces() map[string]interface{} {
 		provinces []Province
 	)
 
+	provinces = []Province{}
+
 	rows, err := db.Query(provinceBaseQuery)
 
 	if err != nil {

@@ -61,6 +61,8 @@ func GetSchools(page int, pageSize int, districtID int, provinceID int, competen
 		schoolPaging SchoolPaging
 	)
 
+	schoolPaging.Schools = []School{}
+
 	var row *sql.Row
 
 	var districtFilter = ""
