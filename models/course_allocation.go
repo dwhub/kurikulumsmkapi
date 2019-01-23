@@ -18,9 +18,9 @@ type CourseAllocation struct {
 	TimeAllocation int    `json:"time_allocation"`
 }
 
-var courseAllocationBaseQuery = `SELECT a.id_mapel, a.urutan_mapel, a.id_grup, a.id_kompetensi, a.nama_mapel, b.alokasi_waktu
-								FROM tbl_mapel a
-								LEFT JOIN tbl_mapel_alokasi b on b.id_mapel = a.id_mapel AND b.id_kompetensi = a.id_kompetensi `
+var courseAllocationBaseQuery = `SELECT DISTINCT a.id_mapel, a.urutan_mapel, a.id_grup, b.id_kompetensi, a.nama_mapel, b.alokasi_waktu
+									FROM tbl_mapel_alokasi b
+									LEFT JOIN tbl_mapel a on b.id_mapel = a.id_mapel `
 
 // GetCourseAllocations fetch all course allocation based on group without paging
 func GetCourseAllocations(competencyID int, groupID int) map[string]interface{} {
@@ -31,7 +31,7 @@ func GetCourseAllocations(competencyID int, groupID int) map[string]interface{} 
 
 	courseAllocations = []CourseAllocation{}
 
-	rows, err := db.Query(courseAllocationBaseQuery+" WHERE a.id_grup = ? AND a.id_kompetensi = ? ", groupID, competencyID)
+	rows, err := db.Query(courseAllocationBaseQuery+" WHERE a.id_grup = ? AND b.id_kompetensi = ? ", groupID, competencyID)
 
 	if err != nil {
 		log.WithFields(log.Fields{

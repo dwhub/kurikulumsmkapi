@@ -25,10 +25,10 @@ type CourseDuration struct {
 	XIII2        string `json:"xiii2"`
 }
 
-var courseDurationBaseQuery = `SELECT a.id_mapel, a.urutan_mapel, a.id_grup, a.id_kompetensi, a.nama_mapel, 
+var courseDurationBaseQuery = `SELECT DISTINCT a.id_mapel, a.urutan_mapel, a.id_grup, a.id_kompetensi, a.nama_mapel, 
 								b.x_1, b.x_2, b.xi_1, b.xi_2, b.xii_1, b.xii_2, b.xiii_1, b.xiii_2
-								FROM tbl_mapel a
-								LEFT JOIN tbl_mapel_matriks b on b.id_mapel = a.id_mapel AND b.id_kompetensi = a.id_kompetensi `
+								FROM tbl_mapel_matriks b
+								LEFT JOIN tbl_mapel a on b.id_mapel = a.id_mapel `
 
 // GetCourseDurations fetch all course duration based on group without paging
 func GetCourseDurations(competencyID int, groupID int) map[string]interface{} {
@@ -39,7 +39,7 @@ func GetCourseDurations(competencyID int, groupID int) map[string]interface{} {
 
 	courseDurations = []CourseDuration{}
 
-	rows, err := db.Query(courseDurationBaseQuery+" WHERE a.id_grup = ? AND a.id_kompetensi = ? ", groupID, competencyID)
+	rows, err := db.Query(courseDurationBaseQuery+" WHERE a.id_grup = ? AND b.id_kompetensi = ? ", groupID, competencyID)
 
 	if err != nil {
 		log.WithFields(log.Fields{
