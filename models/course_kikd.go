@@ -38,7 +38,7 @@ var getCourseKIKDBaseQuery = `SELECT a.id_mapel, a.urutan_mapel, a.parent_id_map
 									a.nama_mapel, a.has_children
 									FROM tbl_mapel a `
 
-var getCourseKIBaseQuery = `SELECT id_ki, uraian_ki, urutan_tampil
+var getCourseKIBaseQuery = `SELECT id_ki, uraian_ki, urutan_ki
 							FROM smk.tbl_ki `
 
 var getCourseKDBaseQuery = `SELECT id_kd, uraian_kd, urutan_kd
