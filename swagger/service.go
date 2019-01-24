@@ -277,3 +277,53 @@ package swagger
 //     "$ref": "#/responses/notFound"
 //   "500":
 //     "$ref": "#/responses/courseAllocationResp"
+
+// swagger:operation GET /course/kikd/with/competency/{competencyId}/group/{groupId} course getCourseKIKD
+// ---
+// summary: Return course KI and KD by Competency and Group id
+// description: Get the course KI and KD entity by Competency and Group id.
+// parameters:
+// - name: competencyId
+//   in: path
+//   description: ID of the competency
+//   type: integer
+//   required: true
+// - name: groupId
+//   in: path
+//   description: ID of the group
+//   type: integer
+//   required: true
+// responses:
+//   "200":
+//     "$ref": "#/responses/courseKIKDResp"
+//   "400":
+//     "$ref": "#/responses/badReq"
+//   "404":
+//     "$ref": "#/responses/notFound"
+//   "500":
+//     "$ref": "#/responses/courseKIKDResp"
+
+// swagger:operation GET /course/kikd/detail/with/competency/{competencyId}/course/{courseId} course getKIKDDetail
+// ---
+// summary: Return KI and KD detail by Competency and Course id
+// description: Get the KI and KD detail entity by Competency and Course id.
+// parameters:
+// - name: competencyId
+//   in: path
+//   description: ID of the competency
+//   type: integer
+//   required: true
+// - name: courseId
+//   in: path
+//   description: ID of the course
+//   type: integer
+//   required: true
+// responses:
+//   "200":
+//     "$ref": "#/responses/KIKDDetailResp"
+//   "400":
+//     "$ref": "#/responses/badReq"
+//   "404":
+//     "$ref": "#/responses/notFound"
+//   "500":
+//     "$ref": "#/responses/KIKDDetailResp"

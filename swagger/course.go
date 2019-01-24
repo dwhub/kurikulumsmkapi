@@ -27,3 +27,27 @@ type SwaggCourseAllocationResp struct {
 		Message []models.CourseAllocation `json:"message"`
 	}
 }
+
+// SwaggCourseKIKDResp HTTP status code and course KI and KD model in message
+// swagger:response courseKIKDResp
+type SwaggCourseKIKDResp struct {
+	// in:body
+	Body struct {
+		// HTTP status code
+		Code int `json:"code"`
+		// Course KI and KD model
+		Message []models.CourseKIKD `json:"message"`
+	}
+}
+
+// SwaggKIKDDetailResp HTTP status code and KI and KD detail model in message
+// swagger:response KIKDDetailResp
+type SwaggKIKDDetailResp struct {
+	// in:body
+	Body struct {
+		// HTTP status code
+		Code int `json:"code"`
+		// KI and KD detail model
+		Message []models.KI `json:"message"`
+	}
+}

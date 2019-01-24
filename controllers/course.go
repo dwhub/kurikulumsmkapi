@@ -54,3 +54,47 @@ var GetCourseAllocations = func(w http.ResponseWriter, r *http.Request) {
 
 	u.Respond(w, models.GetCourseAllocations(competencyID, groupID))
 }
+
+// GetCourseKIKDs controller to get course KI and KD by competency and group id
+var GetCourseKIKDs = func(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	competencyID, err := strconv.Atoi(vars["competencyId"])
+	groupID, err := strconv.Atoi(vars["groupId"])
+
+	if err != nil {
+		log.WithFields(log.Fields{
+			"status": "Bad Request",
+			"error":  err,
+		}).Info("Fetch course KI and KD by competency and group id status")
+
+		resp := u.Message(http.StatusBadRequest, "")
+		resp["message"] = "Request param is not valid"
+
+		u.Respond(w, resp)
+		return
+	}
+
+	u.Respond(w, models.GetCourseKIKD(competencyID, groupID))
+}
+
+// GetKIKDDetails controller to get course KI and KD by competency and course id
+var GetKIKDDetails = func(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	competencyID, err := strconv.Atoi(vars["competencyId"])
+	courseID, err := strconv.Atoi(vars["courseId"])
+
+	if err != nil {
+		log.WithFields(log.Fields{
+			"status": "Bad Request",
+			"error":  err,
+		}).Info("Fetch KI and KD detail by competency and course id status")
+
+		resp := u.Message(http.StatusBadRequest, "")
+		resp["message"] = "Request param is not valid"
+
+		u.Respond(w, resp)
+		return
+	}
+
+	u.Respond(w, models.GetKIKDDetail(courseID, competencyID))
+}
