@@ -74,6 +74,12 @@ var GetCourseKIKDs = func(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if groupID == 1 {
+		competencyID = 0
+	} else if groupID == 2 {
+		competencyID = 0
+	}
+
 	u.Respond(w, models.GetCourseKIKD(competencyID, groupID))
 }
 

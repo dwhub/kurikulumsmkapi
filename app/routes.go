@@ -47,5 +47,7 @@ func GetRouter() *mux.Router {
 
 	router.Handle("/v1/course/kikd/detail/with/competency/{competencyId:[0-9]+}/course/{courseId:[0-9]+}", handlers.LoggingHandler(os.Stdout, http.HandlerFunc(c.GetKIKDDetails))).Methods("GET")
 
+	router.Handle("/v1/course/kikd/with/competency/{competencyId:[0-9]+}/group/{groupId:[0-9]+}", handlers.LoggingHandler(os.Stdout, http.HandlerFunc(c.GetCourseKIKDs))).Methods("GET")
+
 	return router
 }
