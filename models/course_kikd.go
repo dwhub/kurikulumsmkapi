@@ -22,16 +22,16 @@ type CourseKIKD struct {
 // KI model and json tag
 type KI struct {
 	ID      int    `json:"id"`
-	Order   int    `json:"order"`
+	Order   string `json:"order"`
 	Name    string `json:"name"`
 	Details []KD   `json:"kds"`
 }
 
 // KD model and json tag
 type KD struct {
-	ID    int     `json:"id"`
-	Order float64 `json:"order"`
-	Name  string  `json:"name"`
+	ID    int    `json:"id"`
+	Order string `json:"order"`
+	Name  string `json:"name"`
 }
 
 var getCourseKIKDBaseQuery = `SELECT a.id_mapel, a.urutan_mapel, a.parent_id_mapel, a.id_grup, a.id_kompetensi, 
@@ -136,6 +136,7 @@ func GetKIKDDetail(courseID int, competencyID int) map[string]interface{} {
 
 		for details.Next() {
 			err = details.Scan(&kd.ID, &kd.Name, &kd.Order)
+			kd.Order = item.Order + "." + kd.Order
 			item.Details = append(item.Details, kd)
 			if err != nil {
 				fmt.Print(err.Error())
