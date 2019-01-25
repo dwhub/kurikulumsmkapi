@@ -103,7 +103,7 @@
       "get": {
         "description": "Get the course allocation entity by Competency and Group id.",
         "tags": [
-          "course"
+          "courses"
         ],
         "summary": "Return course allocation by Competency and Group id",
         "operationId": "getCourseAllocations",
@@ -139,11 +139,51 @@
         }
       }
     },
+    "/course/book/with/competency/{competencyId}/group/{groupId}": {
+      "get": {
+        "description": "Get the course book entity by Competency and Group id.",
+        "tags": [
+          "courses"
+        ],
+        "summary": "Return course book by Competency and Group id",
+        "operationId": "getCourseBooks",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "ID of the competency",
+            "name": "competencyId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "integer",
+            "description": "ID of the group",
+            "name": "groupId",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/courseBookResp"
+          },
+          "400": {
+            "$ref": "#/responses/badReq"
+          },
+          "404": {
+            "$ref": "#/responses/notFound"
+          },
+          "500": {
+            "$ref": "#/responses/courseBookResp"
+          }
+        }
+      }
+    },
     "/course/duration/with/competency/{competencyId}/group/{groupId}": {
       "get": {
         "description": "Get the course duration entity by Competency and Group id.",
         "tags": [
-          "course"
+          "courses"
         ],
         "summary": "Return course duration by Competency and Group id",
         "operationId": "getCourseDurations",
@@ -183,7 +223,7 @@
       "get": {
         "description": "Get the KI and KD detail entity by Competency and Course id.",
         "tags": [
-          "course"
+          "courses"
         ],
         "summary": "Return KI and KD detail by Competency and Course id",
         "operationId": "getKIKDDetail",
@@ -223,7 +263,7 @@
       "get": {
         "description": "Get the course KI and KD entity by Competency and Group id.",
         "tags": [
-          "course"
+          "courses"
         ],
         "summary": "Return course KI and KD by Competency and Group id",
         "operationId": "getCourseKIKD",
@@ -255,6 +295,39 @@
           },
           "500": {
             "$ref": "#/responses/courseKIKDResp"
+          }
+        }
+      }
+    },
+    "/course/with/competency/{competencyId}": {
+      "get": {
+        "description": "Get the course entity by Competency id.",
+        "tags": [
+          "courses"
+        ],
+        "summary": "Return course by Competency id",
+        "operationId": "getCourses",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "ID of the competency",
+            "name": "competencyId",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/courseResp"
+          },
+          "400": {
+            "$ref": "#/responses/badReq"
+          },
+          "404": {
+            "$ref": "#/responses/notFound"
+          },
+          "500": {
+            "$ref": "#/responses/courseResp"
           }
         }
       }
@@ -320,7 +393,7 @@
       "get": {
         "description": "Get the expertise competency entities.",
         "tags": [
-          "expertiseCompetencies"
+          "expertises"
         ],
         "summary": "Return list of expertise competencies.",
         "operationId": "listExpertisePrograms",
@@ -344,7 +417,7 @@
       "get": {
         "description": "Get the expertise competencies entity by program id.",
         "tags": [
-          "expertiseCompetencies"
+          "expertises"
         ],
         "summary": "Return expertise competencies by program id",
         "operationId": "getExpertiseProgramsByFieldId",
@@ -377,7 +450,7 @@
       "get": {
         "description": "Get the expertise field entities.",
         "tags": [
-          "expertiseFields"
+          "expertises"
         ],
         "summary": "Return list of expertise fields.",
         "operationId": "listExpertiseFields",
@@ -401,7 +474,7 @@
       "get": {
         "description": "Get the curriculum structure field entities.",
         "tags": [
-          "expertiseFields"
+          "expertises"
         ],
         "summary": "Return list of curriculum structure.",
         "operationId": "listCurriculumStructure",
@@ -425,7 +498,7 @@
       "get": {
         "description": "Get the expertise program entities.",
         "tags": [
-          "expertisePrograms"
+          "expertises"
         ],
         "summary": "Return list of expertise programs.",
         "operationId": "listExpertisePrograms",
@@ -449,7 +522,7 @@
       "get": {
         "description": "Get the expertise program entity by field id.",
         "tags": [
-          "expertisePrograms"
+          "expertises"
         ],
         "summary": "Return expertise program by field id",
         "operationId": "getExpertiseProgramsByFieldId",
@@ -672,6 +745,32 @@
       },
       "x-go-package": "github.com/dwhub/kurikulumsmkapi/models"
     },
+    "Course": {
+      "description": "Course model and json tag",
+      "type": "object",
+      "properties": {
+        "group_id": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "GroupID"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "ID"
+        },
+        "name": {
+          "type": "string",
+          "x-go-name": "Name"
+        },
+        "order": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "Order"
+        }
+      },
+      "x-go-package": "github.com/dwhub/kurikulumsmkapi/models"
+    },
     "CourseAllocation": {
       "description": "CourseAllocation model and json tag",
       "type": "object",
@@ -704,6 +803,63 @@
           "type": "integer",
           "format": "int64",
           "x-go-name": "TimeAllocation"
+        }
+      },
+      "x-go-package": "github.com/dwhub/kurikulumsmkapi/models"
+    },
+    "CourseBook": {
+      "description": "CourseBook model and json tag",
+      "type": "object",
+      "properties": {
+        "competency_id": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "CompetencyID"
+        },
+        "course_id": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "CourseID"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "ID"
+        },
+        "name": {
+          "type": "string",
+          "x-go-name": "Name"
+        },
+        "student_book": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "StudentBook"
+        },
+        "teacher_book": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "TeacherBook"
+        },
+        "total": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "Total"
+        },
+        "x": {
+          "type": "string",
+          "x-go-name": "X"
+        },
+        "xi": {
+          "type": "string",
+          "x-go-name": "XI"
+        },
+        "xii": {
+          "type": "string",
+          "x-go-name": "XII"
+        },
+        "xiii": {
+          "type": "string",
+          "x-go-name": "XIII"
         }
       },
       "x-go-package": "github.com/dwhub/kurikulumsmkapi/models"
@@ -961,8 +1117,7 @@
           "x-go-name": "Name"
         },
         "order": {
-          "type": "integer",
-          "format": "int64",
+          "type": "string",
           "x-go-name": "Order"
         }
       },
@@ -989,8 +1144,7 @@
           "x-go-name": "Name"
         },
         "order": {
-          "type": "integer",
-          "format": "int64",
+          "type": "string",
           "x-go-name": "Order"
         }
       },
@@ -1266,6 +1420,28 @@
         }
       }
     },
+    "courseBookResp": {
+      "description": "SwaggCourseBookResp HTTP status code and course book model in message",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "description": "HTTP status code",
+            "type": "integer",
+            "format": "int64",
+            "x-go-name": "Code"
+          },
+          "message": {
+            "description": "Course Book model",
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/CourseBook"
+            },
+            "x-go-name": "Message"
+          }
+        }
+      }
+    },
     "courseDurationResp": {
       "description": "SwaggCourseDurationResp HTTP status code and course duration model in message",
       "schema": {
@@ -1304,6 +1480,28 @@
             "type": "array",
             "items": {
               "$ref": "#/definitions/CourseKIKD"
+            },
+            "x-go-name": "Message"
+          }
+        }
+      }
+    },
+    "courseResp": {
+      "description": "SwaggCourseResp HTTP status code and course model in message",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "description": "HTTP status code",
+            "type": "integer",
+            "format": "int64",
+            "x-go-name": "Code"
+          },
+          "message": {
+            "description": "Course model",
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/Course"
             },
             "x-go-name": "Message"
           }

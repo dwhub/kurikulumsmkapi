@@ -51,3 +51,27 @@ type SwaggKIKDDetailResp struct {
 		Message []models.KI `json:"message"`
 	}
 }
+
+// SwaggCourseBookResp HTTP status code and course book model in message
+// swagger:response courseBookResp
+type SwaggCourseBookResp struct {
+	// in:body
+	Body struct {
+		// HTTP status code
+		Code int `json:"code"`
+		// Course Book model
+		Message []models.CourseBook `json:"message"`
+	}
+}
+
+// SwaggCourseResp HTTP status code and course model in message
+// swagger:response courseResp
+type SwaggCourseResp struct {
+	// in:body
+	Body struct {
+		// HTTP status code
+		Code int `json:"code"`
+		// Course model
+		Message []models.Course `json:"message"`
+	}
+}
