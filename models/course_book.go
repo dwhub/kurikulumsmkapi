@@ -93,7 +93,7 @@ func GetCourseBooks(competencyID int, groupID int) map[string]interface{} {
 	for rows.Next() {
 		err = rows.Scan(&courseBook.ID, &courseBook.CourseID, &courseBook.Name, &courseBook.CompetencyID,
 			&courseBook.X, &courseBook.XI, &courseBook.XII, &courseBook.XIII, &courseBook.StudentBook,
-			&courseBook.TeacherBook)
+			&courseBook.TeacherBook, &courseBook.Total)
 		courseBooks = append(courseBooks, courseBook)
 		if err != nil {
 			fmt.Print(err.Error())
