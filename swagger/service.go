@@ -372,3 +372,28 @@ package swagger
 //     "$ref": "#/responses/notFound"
 //   "500":
 //     "$ref": "#/responses/courseResp"
+
+// swagger:operation GET /course/with/competency/{competencyId}/group/{groupId} courses getCoursesWithGroup
+// ---
+// summary: Return course by Competency and group id
+// description: Get the course entity by Competency id and group id.
+// parameters:
+// - name: competencyId
+//   in: path
+//   description: ID of the competency
+//   type: integer
+//   required: true
+// - name: groupId
+//   in: path
+//   description: ID of the group
+//   type: integer
+//   required: true
+// responses:
+//   "200":
+//     "$ref": "#/responses/courseResp"
+//   "400":
+//     "$ref": "#/responses/badReq"
+//   "404":
+//     "$ref": "#/responses/notFound"
+//   "500":
+//     "$ref": "#/responses/courseResp"

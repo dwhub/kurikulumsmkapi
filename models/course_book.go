@@ -1,6 +1,7 @@
 package models
 
 import (
+	"database/sql"
 	"fmt"
 	"net/http"
 
@@ -40,7 +41,7 @@ var courseBookBaseQuery = `SELECT a.id_buku, a.id_mapel, b.nama_mapel, a.id_komp
 								LEFT JOIN tbl_mapel b ON b.id_mapel = a.id_mapel `
 
 // GetCourses fetch all course based on competency without paging
-func GetCourses(competencyID int) map[string]interface{} {
+func GetCourses(competencyID int, groupID int) map[string]interface{} {
 	var (
 		course  Course
 		courses []Course
@@ -48,7 +49,14 @@ func GetCourses(competencyID int) map[string]interface{} {
 
 	courses = []Course{}
 
-	rows, err := db.Query(courseBaseQuery+" WHERE a.id_kompetensi IN (0, ?) AND parent_id_mapel = 0 ", competencyID)
+	var rows *sql.Rows
+	var err error
+
+	if groupID > 0 {
+		rows, err = db.Query(courseBaseQuery+" WHERE a.id_kompetensi IN (0, ?) AND parent_id_mapel = 0 AND a.id_grup = ? ", competencyID, groupID)
+	} else {
+		rows, err = db.Query(courseBaseQuery+" WHERE a.id_kompetensi IN (0, ?) AND parent_id_mapel = 0 ", competencyID)
+	}
 
 	if err != nil {
 		log.WithFields(log.Fields{

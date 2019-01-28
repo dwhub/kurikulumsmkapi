@@ -332,6 +332,46 @@
         }
       }
     },
+    "/course/with/competency/{competencyId}/group/{groupId}": {
+      "get": {
+        "description": "Get the course entity by Competency id and group id.",
+        "tags": [
+          "courses"
+        ],
+        "summary": "Return course by Competency and group id",
+        "operationId": "getCoursesWithGroup",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "ID of the competency",
+            "name": "competencyId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "integer",
+            "description": "ID of the group",
+            "name": "groupId",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/courseResp"
+          },
+          "400": {
+            "$ref": "#/responses/badReq"
+          },
+          "404": {
+            "$ref": "#/responses/notFound"
+          },
+          "500": {
+            "$ref": "#/responses/courseResp"
+          }
+        }
+      }
+    },
     "/districts": {
       "get": {
         "description": "Get the district entities.",

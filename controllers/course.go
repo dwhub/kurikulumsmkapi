@@ -145,5 +145,27 @@ var GetCourses = func(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	u.Respond(w, models.GetCourses(competencyID))
+	u.Respond(w, models.GetCourses(competencyID, 0))
+}
+
+// GetCoursesWithGroup controller to get courses by competency
+var GetCoursesWithGroup = func(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	competencyID, err := strconv.Atoi(vars["competencyId"])
+	groupID, err := strconv.Atoi(vars["groupId"])
+
+	if err != nil {
+		log.WithFields(log.Fields{
+			"status": "Bad Request",
+			"error":  err,
+		}).Info("Fetch course by competency id status")
+
+		resp := u.Message(http.StatusBadRequest, "")
+		resp["message"] = "Request param is not valid"
+
+		u.Respond(w, resp)
+		return
+	}
+
+	u.Respond(w, models.GetCourses(competencyID, groupID))
 }
