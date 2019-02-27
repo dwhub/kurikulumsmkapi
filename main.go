@@ -40,8 +40,11 @@ func main() {
 
 	router := app.GetRouter()
 
-	fs := http.FileServer(http.Dir("./explorer/"))
-	router.PathPrefix("/explorer/").Handler(http.StripPrefix("/explorer/", fs))
+	sw := http.FileServer(http.Dir("./explorer/"))
+	router.PathPrefix("/explorer/").Handler(http.StripPrefix("/explorer/", sw))
+
+	fs := http.FileServer(http.Dir("./files/"))
+	router.PathPrefix("/files/").Handler(http.StripPrefix("/files/", fs))
 
 	port := os.Getenv("PORT")
 	if port == "" {

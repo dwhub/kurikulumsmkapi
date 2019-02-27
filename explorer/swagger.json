@@ -615,6 +615,54 @@
         }
       }
     },
+    "/nationalExams": {
+      "get": {
+        "description": "Get the national exams field entities.",
+        "tags": [
+          "nationalExams"
+        ],
+        "summary": "Return list of national exams data.",
+        "operationId": "listNationalExams",
+        "responses": {
+          "200": {
+            "$ref": "#/responses/nationalExamsResp"
+          },
+          "400": {
+            "$ref": "#/responses/badReq"
+          },
+          "404": {
+            "$ref": "#/responses/notFound"
+          },
+          "500": {
+            "$ref": "#/responses/nationalExamsResp"
+          }
+        }
+      }
+    },
+    "/nes": {
+      "get": {
+        "description": "Get the national education standards field entities.",
+        "tags": [
+          "nationalEducationStandards"
+        ],
+        "summary": "Return list of national education standards data.",
+        "operationId": "listNationalEducationStandards",
+        "responses": {
+          "200": {
+            "$ref": "#/responses/nesResp"
+          },
+          "400": {
+            "$ref": "#/responses/badReq"
+          },
+          "404": {
+            "$ref": "#/responses/notFound"
+          },
+          "500": {
+            "$ref": "#/responses/nesResp"
+          }
+        }
+      }
+    },
     "/provinces": {
       "get": {
         "description": "Get the province entities.",
@@ -1190,6 +1238,92 @@
       },
       "x-go-package": "github.com/dwhub/kurikulumsmkapi/models"
     },
+    "NationalEducationStandard": {
+      "description": "NationalEducationStandard model",
+      "type": "object",
+      "properties": {
+        "children": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/NationalEducationStandard"
+          },
+          "x-go-name": "Children"
+        },
+        "cover_path": {
+          "type": "string",
+          "x-go-name": "CoverPath"
+        },
+        "has_child": {
+          "type": "boolean",
+          "x-go-name": "HasChild"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "ID"
+        },
+        "name": {
+          "type": "string",
+          "x-go-name": "Name"
+        },
+        "parent_id": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "ParentID"
+        },
+        "pdf_path": {
+          "type": "string",
+          "x-go-name": "PdfPath"
+        },
+        "spacing": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "Spacing"
+        }
+      },
+      "x-go-package": "github.com/dwhub/kurikulumsmkapi/models"
+    },
+    "NationalExamStructure": {
+      "description": "NationalExamStructure model",
+      "type": "object",
+      "properties": {
+        "children": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/NationalExamStructure"
+          },
+          "x-go-name": "Children"
+        },
+        "cover_path": {
+          "type": "string",
+          "x-go-name": "CoverPath"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "ID"
+        },
+        "name": {
+          "type": "string",
+          "x-go-name": "Name"
+        },
+        "parent_id": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "ParentID"
+        },
+        "pdf_path": {
+          "type": "string",
+          "x-go-name": "PdfPath"
+        },
+        "spacing": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "Spacing"
+        }
+      },
+      "x-go-package": "github.com/dwhub/kurikulumsmkapi/models"
+    },
     "Paging": {
       "description": "Paging fields",
       "type": "object",
@@ -1708,6 +1842,50 @@
           "message": {
             "description": "Detailed error message",
             "type": "string",
+            "x-go-name": "Message"
+          }
+        }
+      }
+    },
+    "nationalExamsResp": {
+      "description": "SwaggNationalExamsResp HTTP status code and national exam model in message",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "description": "HTTP status code",
+            "type": "integer",
+            "format": "int64",
+            "x-go-name": "Code"
+          },
+          "message": {
+            "description": "Expertise fields model",
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/NationalExamStructure"
+            },
+            "x-go-name": "Message"
+          }
+        }
+      }
+    },
+    "nesResp": {
+      "description": "SwaggNESResp HTTP status code and national education standard model in message",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "description": "HTTP status code",
+            "type": "integer",
+            "format": "int64",
+            "x-go-name": "Code"
+          },
+          "message": {
+            "description": "Expertise fields model",
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/NationalEducationStandard"
+            },
             "x-go-name": "Message"
           }
         }

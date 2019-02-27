@@ -55,5 +55,9 @@ func GetRouter() *mux.Router {
 
 	router.Handle("/v1/course/with/competency/{competencyId:[0-9]+}/group/{groupId:[0-9]+}", handlers.LoggingHandler(os.Stdout, http.HandlerFunc(c.GetCoursesWithGroup))).Methods("GET")
 
+	router.Handle("/v1/nationalExams", handlers.LoggingHandler(os.Stdout, http.HandlerFunc(c.GetNationalExams))).Methods("GET")
+
+	router.Handle("/v1/nes", handlers.LoggingHandler(os.Stdout, http.HandlerFunc(c.GetNationalEducationStandards))).Methods("GET")
+
 	return router
 }

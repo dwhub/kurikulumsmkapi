@@ -397,3 +397,31 @@ package swagger
 //     "$ref": "#/responses/notFound"
 //   "500":
 //     "$ref": "#/responses/courseResp"
+
+// swagger:operation GET /nationalExams nationalExams listNationalExams
+// ---
+// summary: Return list of national exams data.
+// description: Get the national exams field entities.
+// responses:
+//   "200":
+//     "$ref": "#/responses/nationalExamsResp"
+//   "400":
+//     "$ref": "#/responses/badReq"
+//   "404":
+//     "$ref": "#/responses/notFound"
+//   "500":
+//     "$ref": "#/responses/nationalExamsResp"
+
+// swagger:operation GET /nes nationalEducationStandards listNationalEducationStandards
+// ---
+// summary: Return list of national education standards data.
+// description: Get the national education standards field entities.
+// responses:
+//   "200":
+//     "$ref": "#/responses/nesResp"
+//   "400":
+//     "$ref": "#/responses/badReq"
+//   "404":
+//     "$ref": "#/responses/notFound"
+//   "500":
+//     "$ref": "#/responses/nesResp"
