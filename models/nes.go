@@ -33,6 +33,30 @@ type FlatIsiJurusan struct {
 	StandarKejuruanBidangFile sql.NullString `json:"standar_kejuruan_bidang_file"`
 }
 
+// FlatStandarKeahlian model
+type FlatStandarKeahlian struct {
+	ID          int            `json:"id"`
+	ParentID    int            `json:"parent_id"`
+	Title       string         `json:"title"`
+	File        sql.NullString `json:"file"`
+	IsJurusan   bool           `json:"is_jurusan"`
+	SubID       sql.NullInt64  `json:"sub_id"`
+	SubParentID sql.NullInt64  `json:"sub_parent_id"`
+	TitleSub    sql.NullString `json:"title_sub"`
+	FileSub     sql.NullString `json:"file_sub"`
+}
+
+// FlatNationalEducationStruct model
+type FlatNationalEducationStruct struct {
+	FieldID         int    `json:"field_id"`
+	ProgramID       int    `json:"program_id"`
+	CompetencyID    int    `json:"competency_id"`
+	FieldTitle      string `json:"name"`
+	ProgramTitle    string `json:"program_title"`
+	CompetencyTitle string `json:"competency_title"`
+	PdfPath         string `json:"pdf_path"`
+}
+
 var standardRoot = `SELECT standar_id, CONCAT(standar_urutan, '. ', standar_judul) as title, standar_has_sub_1, standar_file
 					FROM tbl_standar 
 					ORDER BY standar_urutan`
@@ -54,10 +78,11 @@ var standarKeahlianQuery = `SELECT a.standar_sub_1_id, a.standar_id_parent,
 							a.standar_sub_1_is_jurusan,
 							b.standar_sub_1_id_parent,
 							b.standar_sub_2_judul,
-							b.standar_sub_2_file
+							b.standar_sub_2_file,
+							b.standar_sub_2_id
 							FROM tbl_standar_sub_1 a 
 							LEFT JOIN tbl_standar_sub_2 b ON a.standar_sub_1_id = b.standar_sub_1_id_parent
-							ORDER BY a.standar_sub_1_id`
+							ORDER BY a.standar_sub_1_id, b.standar_sub_2_urutan`
 
 var standarKeahlianJurusanQuery = `SELECT a.id_bidang, b.id_program, c.id_kompetensi, 
 									CONCAT(a.urutan_bidang, '. ', a.bidang_keahlian) as title_bidang, 
@@ -107,12 +132,22 @@ func LoadRoot() []NationalEducationStandard {
 	}
 
 	isiStandar := ProcessStandarIsi()
+	standarSub := fetchStandarSubRoot()
+
 	for _, item := range root {
 		temp := createCopyNES(item)
 
 		if item.HasChild && item.ID == 2 {
 			for _, bidang := range isiStandar {
 				tempChild := createCopyNES(bidang)
+
+				temp.Children = append(temp.Children, tempChild)
+			}
+		}
+
+		if item.HasChild && item.ID == 6 {
+			for _, standarsub := range standarSub {
+				tempChild := createCopyNES(standarsub)
 
 				temp.Children = append(temp.Children, tempChild)
 			}
@@ -312,6 +347,117 @@ func LoadIsiJurusan() []FlatIsiJurusan {
 	return isiJurusan
 }
 
+func fetchStandarSubRoot() []NationalEducationStandard {
+	var (
+		temp    []NationalEducationStandard
+		tempSub []NationalEducationStandard
+		result  []NationalEducationStandard
+	)
+
+	subRootData := loadStandarSubRootData()
+
+	for _, item := range subRootData {
+		tempNes := NationalEducationStandard{}
+
+		tempNes.ID = item.ID
+		tempNes.Name = item.Title
+
+		if item.File.Valid {
+			pdfPath := strings.Split(item.File.String, "/")
+			tempNes.PdfPath = pdfPath[len(pdfPath)-1]
+		} else {
+			tempNes.HasChild = true
+		}
+
+		tempNes.Spacing = 1
+		tempNes.ParentID = 6
+
+		temp = append(temp, tempNes)
+	}
+
+	ruangKeahlian := loadRuangKeahlian(standarKeahlianJurusanQuery)
+
+	for _, item := range temp {
+		for _, data := range subRootData {
+			if data.SubParentID.Valid {
+				if int(data.SubParentID.Int64) == item.ID {
+					item.HasChild = true
+
+					tempNes := NationalEducationStandard{}
+
+					tempNes.ID = int(data.SubID.Int64)
+					tempNes.Name = data.TitleSub.String
+
+					if data.FileSub.Valid {
+						pdfPath := strings.Split(data.FileSub.String, "/")
+						tempNes.PdfPath = pdfPath[len(pdfPath)-1]
+					} else {
+						tempNes.HasChild = true
+					}
+
+					tempNes.Spacing = 2
+					tempNes.ParentID = item.ID
+
+					item.Children = append(item.Children, tempNes)
+				}
+			}
+		}
+
+		if item.ID == 5 {
+			for _, ruangKeahlianItem := range ruangKeahlian {
+				item.HasChild = true
+				item.Children = append(item.Children, ruangKeahlianItem)
+			}
+		}
+
+		tmpSubs := createCopyNES(item)
+
+		tempSub = append(tempSub, tmpSubs)
+	}
+
+	for _, item := range tempSub {
+		exist := false
+		for _, itemRoot := range result {
+			if item.ID == itemRoot.ID {
+				exist = true
+			}
+		}
+
+		if !exist {
+			tempRoot := createCopyNES(item)
+			result = append(result, tempRoot)
+		}
+	}
+	return result
+}
+
+func loadStandarSubRootData() []FlatStandarKeahlian {
+	var (
+		f      FlatStandarKeahlian
+		result []FlatStandarKeahlian
+	)
+
+	rows, err := db.Query(standarKeahlianQuery)
+
+	if err != nil {
+		log.WithFields(log.Fields{
+			"status": "Failed",
+			"error":  err,
+		}).Info("Fetch national education field status")
+	}
+
+	for rows.Next() {
+		err = rows.Scan(&f.ID, &f.ParentID, &f.Title, &f.File, &f.IsJurusan,
+			&f.SubParentID, &f.TitleSub, &f.FileSub, &f.SubID)
+		result = append(result, f)
+		if err != nil {
+			fmt.Print(err.Error())
+		}
+	}
+
+	return result
+}
+
 func createCopyNES(item NationalEducationStandard) NationalEducationStandard {
 	var result NationalEducationStandard
 
@@ -370,5 +516,157 @@ func findMuatanKejuruanBidangPdf(ID int, isiJurusan []FlatIsiJurusan) []string {
 			result = append(result, pdfPath[len(pdfPath)-1])
 		}
 	}
+	return result
+}
+
+func loadRuangKeahlian(qry string) []NationalEducationStandard {
+	var (
+		f                            FlatNationalEducationStruct
+		flatNationalEducationStructs []FlatNationalEducationStruct
+	)
+
+	rows, err := db.Query(qry)
+
+	if err != nil {
+		log.WithFields(log.Fields{
+			"status": "Failed",
+			"error":  err,
+		}).Info("Fetch structure curriculum status")
+
+		return []NationalEducationStandard{}
+	}
+
+	for rows.Next() {
+		err = rows.Scan(&f.FieldID,
+			&f.ProgramID,
+			&f.CompetencyID,
+			&f.FieldTitle,
+			&f.ProgramTitle,
+			&f.CompetencyTitle,
+			&f.PdfPath,
+		)
+
+		pdfPath := strings.Split(f.PdfPath, "/")
+
+		f.PdfPath = pdfPath[len(pdfPath)-1]
+
+		flatNationalEducationStructs = append(flatNationalEducationStructs, f)
+		if err != nil {
+			fmt.Print(err.Error())
+		}
+	}
+
+	return transformStructureNationalEducation(flatNationalEducationStructs)
+}
+
+// transformStructureNationalExam transform
+func transformStructureNationalEducation(flatNationalEducationStructs []FlatNationalEducationStruct) []NationalEducationStandard {
+	var (
+		field        NationalEducationStandard
+		program      NationalEducationStandard
+		competency   NationalEducationStandard
+		fields       []NationalEducationStandard
+		programs     []NationalEducationStandard
+		competencies []NationalEducationStandard
+		result       []NationalEducationStandard
+	)
+
+	if flatNationalEducationStructs != nil {
+		for _, item := range flatNationalEducationStructs {
+			if !nes2AlreadyExist(fields, item.FieldID) {
+				field.ID = item.FieldID
+				//field.ChildID = item.ProgramID
+				field.Name = item.FieldTitle
+				field.Spacing = 2
+
+				fields = append(fields, field)
+			}
+
+			if !nes2AlreadyExist(programs, item.ProgramID) {
+				program.ID = item.ProgramID
+				//program.ChildID = item.CompetencyID
+				program.ParentID = item.FieldID
+				program.Name = item.ProgramTitle
+				program.Spacing = 3
+
+				programs = append(programs, program)
+			}
+
+			competency.ID = item.CompetencyID
+			competency.ParentID = item.ProgramID
+			competency.Name = item.CompetencyTitle
+			competency.PdfPath = item.PdfPath
+			competency.Spacing = 4
+
+			competencies = append(competencies, competency)
+		}
+
+		result = mergeNes2(fields, programs, competencies)
+	}
+
+	return result
+}
+
+func nes2AlreadyExist(items []NationalEducationStandard, ID int) bool {
+	for _, item := range items {
+		if item.ID == ID {
+			return true
+		}
+	}
+
+	return false
+}
+
+func mergeNes2(fields []NationalEducationStandard, programs []NationalEducationStandard, competencies []NationalEducationStandard) []NationalEducationStandard {
+	var (
+		field      NationalEducationStandard
+		program    NationalEducationStandard
+		competency NationalEducationStandard
+		programRes []NationalEducationStandard
+		result     []NationalEducationStandard
+	)
+
+	if programs != nil {
+		for _, itemProg := range programs {
+			program = NationalEducationStandard{}
+			program.ID = itemProg.ID
+			program.Name = itemProg.Name
+			program.ParentID = itemProg.ParentID
+			program.Spacing = itemProg.Spacing
+
+			for _, itemComp := range competencies {
+				if itemComp.ParentID == itemProg.ID {
+					competency.ID = itemComp.ID
+					competency.Name = itemComp.Name
+					competency.ParentID = itemComp.ParentID
+					competency.PdfPath = itemComp.PdfPath
+					competency.Spacing = itemComp.Spacing
+
+					program.Children = append(program.Children, itemComp)
+				}
+			}
+
+			programRes = append(programRes, program)
+		}
+	}
+
+	if fields != nil {
+		for _, itemField := range fields {
+			field = NationalEducationStandard{}
+			field.ID = itemField.ID
+			field.Name = itemField.Name
+			field.ParentID = 100
+			field.Spacing = itemField.Spacing
+
+			for _, itemProg := range programRes {
+				if itemProg.ParentID == itemField.ID {
+					field.Children = append(field.Children, itemProg)
+				}
+			}
+
+			result = append(result, field)
+		}
+	}
+
 	return result
 }
