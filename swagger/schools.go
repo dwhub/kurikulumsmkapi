@@ -33,6 +33,10 @@ type SwaggGetSchoolsParam struct {
 	//
 	// in: query
 	SchoolType string `json:"schoolType"`
+	// Sub District type param
+	//
+	// in: query
+	SubDistrict string `json:"subDistrict"`
 }
 
 // SwaggSchoolResp HTTP status code and school model in message

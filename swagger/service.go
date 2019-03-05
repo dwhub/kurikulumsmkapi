@@ -104,6 +104,40 @@ package swagger
 //   "500":
 //     "$ref": "#/responses/districtsResp"
 
+// swagger:operation GET /subDistricts districts listSubDistricts
+// ---
+// summary: Return list of sub districts.
+// description: Get the district entities.
+// responses:
+//   "200":
+//     "$ref": "#/responses/subDistrictsResp"
+//   "400":
+//     "$ref": "#/responses/badReq"
+//   "404":
+//     "$ref": "#/responses/notFound"
+//   "500":
+//     "$ref": "#/responses/subDistrictsResp"
+
+// swagger:operation GET /subDistricts/with/district/{districtId} districts getSubDistrictByDistrictID
+// ---
+// summary: Return sub districts by District id
+// description: Get sub district entity by District id.
+// parameters:
+// - name: districtId
+//   in: path
+//   description: ID of the district
+//   type: integer
+//   required: true
+// responses:
+//   "200":
+//     "$ref": "#/responses/subDistrictsResp"
+//   "400":
+//     "$ref": "#/responses/badReq"
+//   "404":
+//     "$ref": "#/responses/notFound"
+//   "500":
+//     "$ref": "#/responses/subDistrictsResp"
+
 // swagger:operation GET /schools schools listSchools
 // ---
 // summary: Return list of schools with paging.

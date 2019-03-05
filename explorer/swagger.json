@@ -739,6 +739,13 @@
             "description": "schools type param",
             "name": "schoolType",
             "in": "query"
+          },
+          {
+            "type": "string",
+            "x-go-name": "SubDistrict",
+            "description": "Sub District type param",
+            "name": "subDistrict",
+            "in": "query"
           }
         ],
         "responses": {
@@ -777,6 +784,63 @@
           },
           "500": {
             "$ref": "#/responses/schoolResp"
+          }
+        }
+      }
+    },
+    "/subDistricts": {
+      "get": {
+        "description": "Get the district entities.",
+        "tags": [
+          "districts"
+        ],
+        "summary": "Return list of sub districts.",
+        "operationId": "listSubDistricts",
+        "responses": {
+          "200": {
+            "$ref": "#/responses/subDistrictsResp"
+          },
+          "400": {
+            "$ref": "#/responses/badReq"
+          },
+          "404": {
+            "$ref": "#/responses/notFound"
+          },
+          "500": {
+            "$ref": "#/responses/subDistrictsResp"
+          }
+        }
+      }
+    },
+    "/subDistricts/with/district/{districtId}": {
+      "get": {
+        "description": "Get sub district entity by District id.",
+        "tags": [
+          "districts"
+        ],
+        "summary": "Return sub districts by District id",
+        "operationId": "getSubDistrictByDistrictID",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "ID of the district",
+            "name": "districtId",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/subDistrictsResp"
+          },
+          "400": {
+            "$ref": "#/responses/badReq"
+          },
+          "404": {
+            "$ref": "#/responses/notFound"
+          },
+          "500": {
+            "$ref": "#/responses/subDistrictsResp"
           }
         }
       }
@@ -1437,6 +1501,25 @@
       },
       "x-go-package": "github.com/dwhub/kurikulumsmkapi/models"
     },
+    "SubDistrict": {
+      "description": "SubDistrict model and json tag",
+      "type": "object",
+      "properties": {
+        "district": {
+          "type": "string",
+          "x-go-name": "District"
+        },
+        "district_id": {
+          "type": "string",
+          "x-go-name": "DistrictID"
+        },
+        "name": {
+          "type": "string",
+          "x-go-name": "Name"
+        }
+      },
+      "x-go-package": "github.com/dwhub/kurikulumsmkapi/models"
+    },
     "System": {
       "description": "System model and json tag",
       "type": "object",
@@ -1979,6 +2062,28 @@
             "type": "array",
             "items": {
               "$ref": "#/definitions/School"
+            },
+            "x-go-name": "Message"
+          }
+        }
+      }
+    },
+    "subDistrictsResp": {
+      "description": "SwaggSubDistrictsResp HTTP status code and sub districts model in message",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "description": "HTTP status code",
+            "type": "integer",
+            "format": "int64",
+            "x-go-name": "Code"
+          },
+          "message": {
+            "description": "Province model",
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/SubDistrict"
             },
             "x-go-name": "Message"
           }

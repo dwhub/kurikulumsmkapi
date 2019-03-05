@@ -17,6 +17,7 @@ var GetSchools = func(w http.ResponseWriter, r *http.Request) {
 	var provinceID int
 	var competencyID int
 	var schoolType int
+	var subDistrict string
 	var err error
 
 	pageSizeParam := r.URL.Query().Get("pageSize")
@@ -25,6 +26,7 @@ var GetSchools = func(w http.ResponseWriter, r *http.Request) {
 	provinceIDParam := r.URL.Query().Get("provinceID")
 	competencyIDParam := r.URL.Query().Get("competencyID")
 	schoolTypeParam := r.URL.Query().Get("schoolType")
+	subDistrictParam := r.URL.Query().Get("subDistrict")
 
 	pageSize, err = strconv.Atoi(pageSizeParam)
 	page, err = strconv.Atoi(pageParam)
@@ -40,21 +42,27 @@ var GetSchools = func(w http.ResponseWriter, r *http.Request) {
 	if len(schoolTypeParam) > 0 {
 		schoolType, err = strconv.Atoi(schoolTypeParam)
 	}
+	subDistrict = subDistrictParam
 
-	if err != nil {
+	if err != nil || pageSize == 0 {
 		log.WithFields(log.Fields{
 			"status": "Bad Request",
 			"error":  err,
 		}).Info("Fetch school status")
 
 		resp := u.Message(http.StatusBadRequest, "")
-		resp["message"] = "Request param is not valid"
+
+		if pageSize == 0 && err == nil {
+			resp["message"] = "Page size must be greater than 0"
+		} else {
+			resp["message"] = "Request param is not valid"
+		}
 
 		u.Respond(w, resp)
 		return
 	}
 
-	u.Respond(w, models.GetSchools(page, pageSize, districtID, provinceID, competencyID, schoolType))
+	u.Respond(w, models.GetSchools(page, pageSize, districtID, provinceID, competencyID, schoolType, subDistrict))
 }
 
 // GetAllSchools controller to get all schools entities without paging

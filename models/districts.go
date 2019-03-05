@@ -29,7 +29,7 @@ func GetAllDistricts() map[string]interface{} {
 
 	districts = []District{}
 
-	rows, err := db.Query(districtBaseQuery)
+	rows, err := db.Query(districtBaseQuery + " ORDER BY a.kabupaten ")
 
 	if err != nil {
 		log.WithFields(log.Fields{
@@ -60,7 +60,7 @@ func GetDistrictByProvinceID(provinceID int) map[string]interface{} {
 
 	districts = []District{}
 
-	rows, err := db.Query(districtBaseQuery+"where a.id_provinsi = ?", provinceID)
+	rows, err := db.Query(districtBaseQuery+"where a.id_provinsi = ?"+" ORDER BY a.kabupaten ", provinceID)
 
 	if err != nil {
 		log.WithFields(log.Fields{

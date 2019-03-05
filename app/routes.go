@@ -25,6 +25,10 @@ func GetRouter() *mux.Router {
 
 	router.Handle("/v1/districts/with/province/{provinceId:[0-9]+}", handlers.LoggingHandler(os.Stdout, http.HandlerFunc(c.GetDistrictByProvinceID))).Methods("GET")
 
+	router.Handle("/v1/subDistricts", handlers.LoggingHandler(os.Stdout, http.HandlerFunc(c.GetSubDistricts))).Methods("GET")
+
+	router.Handle("/v1/subDistricts/with/district/{districtId:[0-9]+}", handlers.LoggingHandler(os.Stdout, http.HandlerFunc(c.GetSubDistrictByDistrictID))).Methods("GET")
+
 	router.Handle("/v1/schools", handlers.LoggingHandler(os.Stdout, http.HandlerFunc(c.GetSchools))).Methods("GET")
 
 	router.Handle("/v1/schools/all", handlers.LoggingHandler(os.Stdout, http.HandlerFunc(c.GetAllSchools))).Methods("GET")

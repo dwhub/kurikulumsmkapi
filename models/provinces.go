@@ -16,7 +16,8 @@ type Province struct {
 }
 
 var provinceBaseQuery = `SELECT id_provinsi, provinsi, urutan_provinsi 
-						FROM tbl_provinsi`
+						FROM tbl_provinsi
+						ORDER BY provinsi`
 
 // GetAllProvinces fetch all provinces without paging
 func GetAllProvinces() map[string]interface{} {

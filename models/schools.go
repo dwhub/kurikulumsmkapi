@@ -55,7 +55,7 @@ var schoolFilterGetTotalRowsQuery = `SELECT COUNT(DISTINCT a.id_sekolah)
 										LEFT JOIN tbl_kompetensi_sekolah d on a.id_sekolah = d.id_sekolah `
 
 // GetSchools fetch schools with paging
-func GetSchools(page int, pageSize int, districtID int, provinceID int, competencyID int, schoolType int) map[string]interface{} {
+func GetSchools(page int, pageSize int, districtID int, provinceID int, competencyID int, schoolType int, subDistrict string) map[string]interface{} {
 	var (
 		school       School
 		schoolPaging SchoolPaging
@@ -80,27 +80,36 @@ func GetSchools(page int, pageSize int, districtID int, provinceID int, competen
 		competencyFilter = " d.id_kompetensi = ? "
 	}
 
+	var subDistrictFilter = ""
+	if len(subDistrict) > 0 {
+		subDistrictFilter = " a.kec_sekolah = ? "
+	}
+
 	var schoolTypeFilter = ""
 
 	if schoolType == 1 {
-		schoolTypeFilter = " AND a.status = 'Negeri' "
+		schoolTypeFilter = " AND a.status = 'N' "
 	} else if schoolType == 2 {
-		schoolTypeFilter = " AND a.status = 'Swasta' "
+		schoolTypeFilter = " AND a.status = 'S' "
 	}
 
-	if districtID == 0 && provinceID == 0 && competencyID == 0 && schoolType == 0 {
+	if districtID == 0 && provinceID == 0 && competencyID == 0 && schoolType == 0 && len(subDistrict) == 0 {
 		row = db.QueryRow(schoolFilterGetTotalRowsQuery)
 	} else {
-		if districtID > 0 && competencyID == 0 {
+		if districtID > 0 && len(subDistrict) == 0 && competencyID == 0 {
 			row = db.QueryRow(schoolFilterGetTotalRowsQuery+"where "+districtFilter+schoolTypeFilter, districtID)
-		} else if districtID == 0 && provinceID > 0 && competencyID == 0 {
+		} else if districtID == 0 && provinceID > 0 && len(subDistrict) == 0 && competencyID == 0 {
 			row = db.QueryRow(schoolFilterGetTotalRowsQuery+"where "+provinceFilter+schoolTypeFilter, provinceID)
-		} else if districtID == 0 && provinceID == 0 && competencyID > 0 {
+		} else if districtID == 0 && provinceID == 0 && len(subDistrict) == 0 && competencyID > 0 {
 			row = db.QueryRow(schoolFilterGetTotalRowsQuery+"where "+competencyFilter+schoolTypeFilter, competencyID)
-		} else if districtID == 0 && provinceID > 0 && competencyID > 0 {
+		} else if districtID == 0 && provinceID > 0 && len(subDistrict) == 0 && competencyID > 0 {
 			row = db.QueryRow(schoolFilterGetTotalRowsQuery+"where "+provinceFilter+" AND "+competencyFilter+schoolTypeFilter, provinceID, competencyID)
 		} else if districtID > 0 && competencyID > 0 {
 			row = db.QueryRow(schoolFilterGetTotalRowsQuery+"where "+districtFilter+" AND "+competencyFilter+schoolTypeFilter, districtID, competencyID)
+		} else if len(subDistrict) > 0 && competencyID == 0 {
+			row = db.QueryRow(schoolFilterGetTotalRowsQuery+"where "+subDistrictFilter+schoolTypeFilter, subDistrict)
+		} else if len(subDistrict) > 0 && competencyID > 0 {
+			row = db.QueryRow(schoolFilterGetTotalRowsQuery+"where "+subDistrictFilter+" AND "+competencyFilter+schoolTypeFilter, subDistrict, competencyID)
 		}
 	}
 
@@ -129,19 +138,23 @@ func GetSchools(page int, pageSize int, districtID int, provinceID int, competen
 
 	var rows *sql.Rows
 
-	if districtID == 0 && provinceID == 0 && competencyID == 0 && schoolType == 0 {
-		rows, err = db.Query(schoolFilterQuery+schoolPagingQuery, pageSize, offset)
+	if districtID == 0 && provinceID == 0 && competencyID == 0 && schoolType == 0 && len(subDistrict) == 0 {
+		rows, err = db.Query(schoolFilterQuery+" ORDER BY a.status, a.id_sekolah "+schoolPagingQuery, pageSize, offset)
 	} else {
-		if districtID > 0 && competencyID == 0 {
-			rows, err = db.Query(schoolFilterQuery+"where "+districtFilter+schoolTypeFilter+schoolPagingQuery, districtID, pageSize, offset)
-		} else if districtID == 0 && provinceID > 0 && competencyID == 0 {
-			rows, err = db.Query(schoolFilterQuery+"where "+provinceFilter+schoolTypeFilter+schoolPagingQuery, provinceID, pageSize, offset)
-		} else if districtID == 0 && provinceID == 0 && competencyID > 0 {
-			rows, err = db.Query(schoolFilterQuery+"where "+competencyFilter+schoolTypeFilter+schoolPagingQuery, competencyID, pageSize, offset)
-		} else if districtID == 0 && provinceID > 0 && competencyID > 0 {
-			rows, err = db.Query(schoolFilterQuery+"where "+provinceFilter+" AND "+competencyFilter+schoolTypeFilter+schoolPagingQuery, provinceID, competencyID, pageSize, offset)
+		if districtID > 0 && len(subDistrict) == 0 && competencyID == 0 {
+			rows, err = db.Query(schoolFilterQuery+"where "+districtFilter+schoolTypeFilter+" ORDER BY a.status, a.id_sekolah "+schoolPagingQuery, districtID, pageSize, offset)
+		} else if districtID == 0 && provinceID > 0 && len(subDistrict) == 0 && competencyID == 0 {
+			rows, err = db.Query(schoolFilterQuery+"where "+provinceFilter+schoolTypeFilter+" ORDER BY a.status, a.id_sekolah "+schoolPagingQuery, provinceID, pageSize, offset)
+		} else if districtID == 0 && provinceID == 0 && len(subDistrict) == 0 && competencyID > 0 {
+			rows, err = db.Query(schoolFilterQuery+"where "+competencyFilter+schoolTypeFilter+" ORDER BY a.status, a.id_sekolah "+schoolPagingQuery, competencyID, pageSize, offset)
+		} else if districtID == 0 && provinceID > 0 && len(subDistrict) == 0 && competencyID > 0 {
+			rows, err = db.Query(schoolFilterQuery+"where "+provinceFilter+" AND "+competencyFilter+schoolTypeFilter+" ORDER BY a.status, a.id_sekolah "+schoolPagingQuery, provinceID, competencyID, pageSize, offset)
 		} else if districtID > 0 && competencyID > 0 {
-			rows, err = db.Query(schoolFilterQuery+"where "+districtFilter+" AND "+competencyFilter+schoolTypeFilter+schoolPagingQuery, districtID, competencyID, pageSize, offset)
+			rows, err = db.Query(schoolFilterQuery+"where "+districtFilter+" AND "+competencyFilter+schoolTypeFilter+" ORDER BY a.status, a.id_sekolah "+schoolPagingQuery, districtID, competencyID, pageSize, offset)
+		} else if len(subDistrict) > 0 && competencyID == 0 {
+			rows, err = db.Query(schoolFilterQuery+"where "+subDistrictFilter+schoolTypeFilter+" ORDER BY a.status, a.id_sekolah "+schoolPagingQuery, subDistrict, pageSize, offset)
+		} else if len(subDistrict) > 0 && competencyID > 0 {
+			rows, err = db.Query(schoolFilterQuery+"where "+subDistrictFilter+" AND "+competencyFilter+schoolTypeFilter+" ORDER BY a.status, a.id_sekolah "+schoolPagingQuery, subDistrict, competencyID, pageSize, offset)
 		}
 	}
 
